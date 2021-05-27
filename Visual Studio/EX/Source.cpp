@@ -3,21 +3,29 @@ using namespace std;
 
 #include <SDL.h>
 
-//	size of window on screen
+//	size of window on screen///////////////////////////////////////////////
 constexpr auto WIDTH = 400;
 constexpr auto HEIGHT = 400;
+///////////////////////////////////////////////////////////////////////////
+
+
 
 //	include desired libraries if needed
 #include "../lib_Point/Point.h"
 #include "../lib_Slider/Slider.h"
 
-//	entry point of application
+///////////////////////////////////////////////////////////////////////////
+
+
+
+//	entry point of application/////////////////////////////////////////////
 int main(int argc, char** argv) {
 
 #pragma region SDL initialization
-	// SDL initialization
+	// SDL initialization////
 	SDL_Window* fenetre = NULL;
 	SDL_Renderer* renderer = NULL;
+	/////////////////////////
 
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		cout << "ERREUR : can't initialize SDL!" << endl;
@@ -69,7 +77,7 @@ int main(int argc, char** argv) {
 		point.drawCircle(renderer, rayon, color, true); 
 
 
-		//	give event to objects for update
+		//	give event to objects for update //hey
 		point.update(event);
 		slider1.draw(renderer, event);
 
