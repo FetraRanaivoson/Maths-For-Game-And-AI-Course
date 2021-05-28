@@ -4,8 +4,8 @@ using namespace std;
 #include <SDL.h>
 
 //	size of window on screen
-constexpr auto WIDTH = 400;
-constexpr auto HEIGHT = 400;
+constexpr auto FENETRE_WIDTH = 400;
+constexpr auto FENETRE_HEIGHT = 400;
 
 //	include desired libraries if needed
 #include "../lib_Point/Point.h"
@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its renderer
-	fenetre = SDL_CreateWindow("SDL template", 200, 100, WIDTH, HEIGHT, 0);
+	fenetre = SDL_CreateWindow("SDL template", 200, 100, FENETRE_WIDTH, FENETRE_HEIGHT, 0);
 	renderer = SDL_CreateRenderer(fenetre, 0, 0);
 #pragma endregion
 

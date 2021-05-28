@@ -2,11 +2,14 @@
 using namespace std;
 
 #include <SDL.h>
-constexpr auto WIDTH = 800;
-constexpr auto HEIGHT = 600;
+constexpr auto FENETRE_WIDTH = 600;
+constexpr auto FENETRE_HEIGHT = 600;
 #include "../lib_Point/Point.h"
 #include "../lib_Cloud/Cloud.h"
 #include "../lib_Slider/Slider.h"
+
+//	on donne des noms aux indices du tableau de pointeurs de sliders
+enum { MARGE_GAUCHE, MARGE_HAUT, LONGUEUR, HAUTEUR, ESPACEMENT_X, ESPACEMENT_Y };
 
 int main(int argc, char** argv) {
 
@@ -25,30 +28,25 @@ int main(int argc, char** argv) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its renderer
-	fenetre = SDL_CreateWindow("SDL template", 200, 100, WIDTH, HEIGHT, 0);
+	fenetre = SDL_CreateWindow("SDL template", 200, 100, FENETRE_WIDTH, FENETRE_HEIGHT, 0);
 	renderer = SDL_CreateRenderer(fenetre, 0, 0);
 #pragma endregion
 
 
-	double marginLeft = 100;
-	double marginTop = 100;
-	double horizontalSpacing = 150;
-	double verticalSpacing = 100;
-
-	//Create sliders/////////
-	Slider marginLeftSlider(marginLeft, 400, 100, 0, 100, marginLeft);
-	Slider marginTopSlider(marginLeft, 500, 100, 0, 100, marginTop);
-
-	Slider recWidthSlider(marginLeft + 200, 400, 100, 0, 100, 70);
-	Slider recHeightSlider(marginLeft + 200, 500, 100, 0, 100, 50);
-
-	Slider horizontalSpacingSlider(marginLeft + 400, 400, 100, 0, 100, horizontalSpacing);
-	Slider verticalSpacingSlider(marginLeft + 400, 500, 100, 0, 100, verticalSpacing);
-	////////////////////////
+	//	creation des 6 sliders
+	Slider* sliders[6];
+	for (int i = 0; i < 6; i++) {
+		//	i    0  1  2  3  4  5
+		//	i/2	 0  0  1  1  2  2
+		//	i%2  0  1  0  1  0  1
+		int x = 100 + (i / 2) * (100 + 30);
+		int y = 550 + (i % 2) * 30;
+		sliders[i] = new Slider(x, y, 120, 1, 300, 30);
+	}
 
 	
-
-	SDL_Rect rectangle;
+	//	rectangle utilise pour l'affichage
+	SDL_Rect rect;
 	
 	while (true) {
 		//	draw image
@@ -60,41 +58,52 @@ int main(int argc, char** argv) {
 
 		//	- draw any desired graphical object
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+		int largeurTotalePremièreLigne = 0; 
+		int largeurTotaleDeuxièmeLigne = 0; 
+		rect.x = sliders[MARGE_GAUCHE]->getValue();
+		rect.y = sliders[MARGE_HAUT]->getValue();
+		rect.w = sliders[LONGUEUR]->getValue();
+		rect.h = sliders[HAUTEUR]->getValue();
+		SDL_RenderFillRect(renderer, &rect);
 
-		double width = 0;
-		
-		rectangle.x = marginLeftSlider.getValue();
-		rectangle.y = marginTopSlider.getValue();
-		rectangle.w = recWidthSlider.getValue();
-		rectangle.h = recHeightSlider.getValue();
-		SDL_RenderDrawRect(renderer, &rectangle);
-		SDL_RenderFillRect(renderer, &rectangle);
-
+		//	Affichage des rectangles de la première ligne
 		do {
-			rectangle.x += recWidthSlider.getValue() + horizontalSpacingSlider.getValue();
-			SDL_RenderDrawRect(renderer, &rectangle);
-			SDL_RenderFillRect(renderer, &rectangle);
+			rect.x += sliders[LONGUEUR]->getValue() + sliders[ESPACEMENT_X]->getValue();
+			SDL_RenderFillRect(renderer, &rect);
+			//L = abscisses en X du dernier rectangle affiché + sa longueur
+			largeurTotalePremièreLigne = rect.x + rect.w; 
 
-			width += rectangle.x + (rectangle.w) / 2.0;
+			//	Je me mets à la ligne et je sors du boucle si width > WIDTH
+			if (largeurTotalePremièreLigne > FENETRE_WIDTH) {
+				//Supprimer dabord le rectangle qui dépasse
+				rect.w = 0;
+				rect.h = 0;
+				SDL_RenderFillRect(renderer, &rect);
+				//Se mettre à la ligne
+				rect.x = sliders[MARGE_GAUCHE]->getValue();
+				rect.y += sliders[MARGE_HAUT]->getValue() + sliders[ESPACEMENT_Y]->getValue();
+				//Réafficher les réctangles sur la deuxième ligne
+				rect.w = sliders[LONGUEUR]->getValue();
+				rect.h = sliders[HAUTEUR]->getValue();
+				SDL_RenderFillRect(renderer, &rect);
+			}
+			// Tant que largeurTotalePremièreLigne < FENETRE_WIDTH,  j'affiche des rectangles en haut
+		} while (largeurTotalePremièreLigne < FENETRE_WIDTH); 
+
+		cout << largeurTotalePremièreLigne << endl;
+
+		//	Affichage des rectangles de la deuxième ligne
+		do {
+			rect.x += sliders[LONGUEUR]->getValue() + sliders[ESPACEMENT_X]->getValue();
+			SDL_RenderFillRect(renderer, &rect);
+			//	l = abscisses en X du dernier rectangle affiché de la deuxième + sa longueur
+			largeurTotaleDeuxièmeLigne = rect.x + rect.w; 
 			
-		} while (width < WIDTH); 
-		cout << width <<" "<< WIDTH <<endl;
-		/*
-		width = 0;
-		rectangle.x = marginLeftSlider.getValue();
-		rectangle.y += marginTopSlider.getValue() + horizontalSpacingSlider.getValue();
+		} while (largeurTotalePremièreLigne > FENETRE_WIDTH && largeurTotalePremièreLigne > largeurTotaleDeuxièmeLigne );
 
-		do {
-			rectangle.x += recWidthSlider.getValue();
-			SDL_RenderDrawRect(renderer, &rectangle);
-			SDL_RenderFillRect(renderer, &rectangle);
 
-			width += rectangle.x;
-		} while (width < WIDTH);
-		*/	
 
-	
-		
+
 
 		//	event management
 		//	****************
@@ -106,13 +115,11 @@ int main(int argc, char** argv) {
 
 
 		//	give event to objects for update
-		//point1.update(event);
-		recWidthSlider.draw(renderer, event);
-		recHeightSlider.draw(renderer, event);
-		marginLeftSlider.draw(renderer, event);
-		marginTopSlider.draw(renderer, event);
-		horizontalSpacingSlider.draw(renderer, event);
-		verticalSpacingSlider.draw(renderer, event);
+			//	affichage des sliders
+		for (int i = 0; i < 6; i++) {
+			sliders[i]->draw(renderer, event);
+		}
+
 
 		//	show rendering buffer
 		//	*********************
