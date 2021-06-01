@@ -40,21 +40,28 @@ int Cloud::closestPoint(const Point& p) const {
 	int minIndex = -1;
 
 	if (nbPoints > 0) {
-		double dMin = p.sqrDist(points[0]);
+		double dMin = p.sqrDist(points[0]); //initialize the min distance
 		minIndex = 0;
 
 		for (int i = 1; i < nbPoints; i++) {
-			double d = p.sqrDist(points[i]);
+			double d = p.sqrDist(points[i]); //Calculer la distance par rapport au point p qu'on manipule
 
 			if (d < dMin) {
-				dMin = d;
-				minIndex = i;
+				dMin = d;   //le nouveau distance le plus proche de p
+				minIndex = i; //son index
 			}
 		}
 	}
 
-	return minIndex;
+	return minIndex; //on retourne son index
 }
+
+
+
+
+
+
+
 
 void Cloud::update(SDL_Event &evt) {
 	for (int i = 0; i < nbPoints; i++) {
