@@ -12,36 +12,59 @@ constexpr auto ORIGIN_Y = HEIGHT / 2;
 //	include desired header files for libraries
 #include "../lib_Slider/Slider.h"
 #include "../lib_Point/Point.h"
+#include "TracéDeFonctions.h"
 
-enum { X_GAUCHE, X_DROIT, Y_BAS, Y_HAUT, COEFF_A, COEFF_B};
+enum { X_GAUCHE, X_DROIT, Y_BAS, Y_HAUT, COEFF_A, COEFF_B, SQUARE_COEFF};
+#define MAX_POINTS 1000
 
-void drawLeftBottomContainer(SDL_Rect& rect, Slider* sliders []) {
+void placePointsForSquareFunction(Point points [], Slider* sliders []) {
+	// y = x²
+	for (int x = 0; x < MAX_POINTS; x++) {
+		points[x].x = x ;
+		points[x].y = points[x].x * points[x].x + ORIGIN_Y;
+		points[x].x += ORIGIN_X; //OFFSET TO ORIGIN
+	}
+
+}
+
+void displaySquareFunction(Point points[], Slider* sliders[], SDL_Renderer* renderer) {
+	for (int x = 0; x < MAX_POINTS; x++) {
+		points[x].x = x;
+		points[x].y = sliders[SQUARE_COEFF]->getValue() * points[x].x * points[x].x + ORIGIN_Y;
+		points[x].x += ORIGIN_X; //OFFSET TO ORIGIN
+		points[x].draw(renderer, Color(255, 0, 0, SDL_ALPHA_OPAQUE), 2);
+	}
+
+}
+
+
+void drawBottomLeftRectangle(SDL_Rect& rect, Slider* sliders []) {
 	rect.x = ORIGIN_X;
 	rect.y = ORIGIN_Y;
 	rect.w = sliders[X_GAUCHE]->getValue();
 	rect.h = - sliders[Y_BAS]->getValue();
 }
 
-void drawRightBottomContainer(SDL_Rect& rect, Slider* sliders[]) {
+void drawBottomRightRectangle(SDL_Rect& rect, Slider* sliders[]) {
 	rect.x += 1;
 	rect.w = sliders[X_DROIT]->getValue();
 	rect.h = - sliders[Y_BAS]->getValue();
 }
 
-void drawTopLeftContainer(SDL_Rect& rect, Slider* sliders[]) {
-	rect.y -= 1;
-	rect.x -= 1;
+void drawTopLeftRectangle(SDL_Rect& rect, Slider* sliders[]) {
+	rect.y -= 1; //monter de -1 en y
+	rect.x -= 1; //remettre x en place (origine) pour monter
 	rect.w = sliders[X_GAUCHE]->getValue();
 	rect.h = - sliders[Y_HAUT]->getValue();
 }
 
-void drawTopRightContainer(SDL_Rect& rect, Slider* sliders[]) {
-	rect.x += 1;
+void drawTopRightRectangle(SDL_Rect& rect, Slider* sliders[]) {
+	rect.x += 1; //Ajouter +1 à x à nouveau pour le rectangle à droite
 	rect.w = sliders[X_DROIT]->getValue();
 	rect.h = - sliders[Y_HAUT]->getValue();
 }
 
-void drawLinearFunction(Point pointA, Point pointB, Slider* sliders[], SDL_Renderer* renderer) {
+void displayLinearFunction(Point pointA, Point pointB, Slider* sliders[], SDL_Renderer* renderer) {
 	//y = ax - b
 	double y = 0;
 	double x = 0;
@@ -50,11 +73,18 @@ void drawLinearFunction(Point pointA, Point pointB, Slider* sliders[], SDL_Rende
 	a = sliders[COEFF_A]->getValue();
 	b = sliders[COEFF_B]->getValue();
 	//Finding points coordinates that intersect the line
+	if (x == 0) {
+		pointB.x = 0 + ORIGIN_X;
+		pointB.y = -b + ORIGIN_Y;
+		//Make an horizontal line between B and A
+		//pointA.x = ORIGIN_X + 100;
+		//pointA.y = -b + ORIGIN_Y;
+	}
 	if (y == 0) {
 		if (a == 0) {
 			//Horizontal line
 			pointA.x = 0 + ORIGIN_X;
-			pointA.y = b + ORIGIN_Y;
+			pointA.y = - b + ORIGIN_Y;
 			
 		}
 		if (a != 0) {
@@ -63,15 +93,11 @@ void drawLinearFunction(Point pointA, Point pointB, Slider* sliders[], SDL_Rende
 		}
 		
 	}
-	if (x == 0) {
-		pointB.x = 0 + ORIGIN_X;
-		pointB.y = - b + ORIGIN_Y;
-	}
+
 	pointA.draw(renderer, Color(240, 0, 0, SDL_ALPHA_OPAQUE), 10);
 	pointB.draw(renderer, Color(240, 0, 0, SDL_ALPHA_OPAQUE), 10);
 	SDL_RenderDrawLine(renderer, pointA.x, pointA.y, pointB.x, pointB.y);
-	cout << "(" << pointA.x << "," << pointA.y << ")" <<
-	"(" << pointB.x << "," << pointB.y << ")"<< endl;
+	cout << "(" << a << ")" << "(" << b << ")"<< endl;
 }
 
 
@@ -85,6 +111,8 @@ double getSliderMaxRange(int sliderIndex) {
 		maxRange = 100.0;
 	if (sliderIndex == COEFF_B)
 		maxRange = 1000.0;
+	if (sliderIndex == SQUARE_COEFF)
+		maxRange = .5;
 	return maxRange;
 }
 
@@ -97,26 +125,39 @@ double getSliderMinRange(int sliderIndex) {
 	if (sliderIndex == COEFF_A)
 		minRange = - 100.0;
 	if (sliderIndex == COEFF_B)
-		minRange = - 1000.0;
+		minRange = -1000.0;
+	if (sliderIndex == SQUARE_COEFF)
+		minRange = -.5;
 	return minRange;
 }
-
-
-
 
 double getSliderInitialValue(int sliderIndex) {
 	double initialValue = 0;
 	if (sliderIndex == X_GAUCHE || sliderIndex == Y_BAS)
-		initialValue = ORIGIN_X - 250.0;
+		initialValue = 250.0;
 	if (sliderIndex == X_DROIT || sliderIndex == Y_HAUT)
-		initialValue = ORIGIN_Y + 250.0;
+		initialValue = -250.0;
 	if (sliderIndex == COEFF_A || sliderIndex == COEFF_B)
 		initialValue = 0;
+	if (sliderIndex == SQUARE_COEFF)
+		initialValue = .25;
 	return initialValue;
 }
 
+void placeSliders(Slider* sliders[])
+{
+	for (int i = 0; i < 7; i++) {
+		int x = 30 + (i / 2) * (200 + 30);
+		int y = HEIGHT - 100 + (i % 2) * 30;
+		double maxRange = getSliderMaxRange(i);
+		double minRange = getSliderMinRange(i);
+		double initialValue = getSliderInitialValue(i);
+		sliders[i] = new Slider(x, y, 200, minRange, maxRange, initialValue);
+	}
+}
+
 void setPainterToBlack(SDL_Renderer* renderer) {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 }
 
 void setPainterToWhite(SDL_Renderer* renderer) {
@@ -131,7 +172,7 @@ void start(SDL_Renderer* renderer, SDL_Rect& rect, Slider* sliders[]) {
 		SDL_RenderClear(renderer);
 
 		//	- draw any desired graphical objects here
-		drawLeftBottomContainer(rect, sliders);
+		drawBottomLeftRectangle(rect, sliders);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
 
 		//	****************  //
@@ -174,69 +215,44 @@ int main(int argc, char** argv) {
 #pragma endregion
 
 	SDL_Rect rect;
-	Slider* sliders[6];
-	for (int i = 0; i < 6; i++ ) {
-		int x = 30 + (i / 2) * (500 + 30);
-		int y = HEIGHT - 100 + (i % 2) * 30;
-		double maxRange = getSliderMaxRange(i);
-		double minRange = getSliderMinRange(i);
-		double initialValue = getSliderInitialValue(i);
-		sliders[i] = new Slider(x, y, 500, minRange, maxRange, initialValue);
-	}
+	Slider* sliders[7];
+	placeSliders(sliders);
+
+	//Place points for linear function y = ax + b
 	Point pointA(ORIGIN_X, ORIGIN_Y, true);
 	Point pointB(ORIGIN_X, ORIGIN_Y, true);
+	
+	//Place points for square function y = x²
+	Point points[MAX_POINTS];
+	placePointsForSquareFunction(points, sliders);
+
 
 	bool end = false;
 	while (!end) {
 		//	paint window in black (clear)
 		setPainterToBlack(renderer);
 		SDL_RenderClear(renderer);
+		setPainterToWhite(renderer);
 
 		//	- draw any desired graphical objects here
-		setPainterToBlack(renderer);
-		drawLeftBottomContainer(rect, sliders);
-		SDL_RenderDrawRect(renderer, &rect);
-		setPainterToWhite(renderer);
-		SDL_RenderFillRect(renderer, &rect);
-
-		setPainterToBlack(renderer);
-		drawRightBottomContainer(rect, sliders);
-		SDL_RenderDrawRect(renderer, &rect);
-		setPainterToWhite(renderer);
-		SDL_RenderFillRect(renderer, &rect);
-
-		setPainterToBlack(renderer);
-		drawTopLeftContainer(rect, sliders);
-		SDL_RenderDrawRect(renderer, &rect);
-		setPainterToWhite(renderer);
-		SDL_RenderFillRect(renderer, &rect);
-
-		setPainterToBlack(renderer);
-		drawTopRightContainer(rect, sliders);
-		SDL_RenderDrawRect(renderer, &rect);
-		setPainterToWhite(renderer);
-		SDL_RenderFillRect(renderer, &rect);
-
-		//Display a linear function graph
-		drawLinearFunction(pointA, pointB, sliders, renderer);
+		displayAxis(rect, sliders, renderer);
+		displayLinearFunction(pointA, pointB, sliders, renderer);
+		displaySquareFunction(points, sliders, renderer);
 		
 
 		//	****************  //
 		//	event management  //
 		//	****************  //
 	
-
 		//	- remove next event from queue
 		SDL_Event event;
 		SDL_PollEvent(&event);
 
 		//	- give event to objects for update if needed
 		//	affichage des sliders
-		for (int i = 0; i < 6; i++) {
-			sliders[i]->draw(renderer, event);
-		}
-		pointA.update(event);
-		pointB.update(event);
+		drawAndUpdateSliders(sliders, renderer, event);
+		updatePointsForLinearFunction(pointA, event, pointB);
+		updatePointsForSquareFunction(points, event);
 
 		//	*********************  //
 		//	show rendering buffer  //
@@ -252,4 +268,37 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
+
+void displayAxis(SDL_Rect& rect, Slider* sliders[], SDL_Renderer* renderer)
+{
+	drawBottomLeftRectangle(rect, sliders);
+	SDL_RenderFillRect(renderer, &rect);
+	drawBottomRightRectangle(rect, sliders);
+	SDL_RenderFillRect(renderer, &rect);
+	drawTopLeftRectangle(rect, sliders);
+	SDL_RenderFillRect(renderer, &rect);
+	drawTopRightRectangle(rect, sliders);
+	SDL_RenderFillRect(renderer, &rect);
+}
+
+void updatePointsForSquareFunction(Point  points[], SDL_Event& event)
+{
+	for (int x = 0; x < MAX_POINTS; x++) {
+		points[x].update(event);
+	}
+}
+
+void updatePointsForLinearFunction(Point& pointA, SDL_Event& event, Point& pointB)
+{
+	pointA.update(event);
+	pointB.update(event);
+}
+
+void drawAndUpdateSliders(Slider* sliders[], SDL_Renderer* renderer, SDL_Event& event)
+{
+	for (int i = 0; i < 7; i++) {
+		sliders[i]->draw(renderer, event);
+	}
+}
+
 

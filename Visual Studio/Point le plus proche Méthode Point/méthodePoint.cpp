@@ -11,24 +11,21 @@ constexpr auto HEIGHT = 600;
 #include "../lib_Slider/Slider.h"
 #include "../lib_Point/Point.h"
 
-//Le nuage de points
-#define MAX_POINTS 50
-Point points[MAX_POINTS];
+#define MAX_POINTS 100
 
-//Mon point à tester
-Point myPoint(0, 0, true);
 
-void placePointCloud() { //Placer les points hors de la boucle avant de faire points[i].draw(...) dans la boucle
+void placePointCloud(Point points [], Point& myPoint) { //Placer les points hors de la boucle avant de faire points[i].draw(...) dans la boucle
 	srand((unsigned int)time(NULL));
 	for (int i = 0; i < MAX_POINTS; i++) {
 		points[i].x = rand() % WIDTH;
 		points[i].y = rand() % HEIGHT;
+		// points [i] = Point (rand() % WIDTH, rand () % HEIGHT)
 	}
 	myPoint.x = rand() % WIDTH;
 	myPoint.y = rand() % HEIGHT;
 }
 
-void drawPointCloud(SDL_Renderer* renderer) {
+void drawPointCloud(SDL_Renderer* renderer, Point points[]) {
 	for (int i = 0; i < MAX_POINTS; i++) {
 		points[i].draw(renderer, Color(0, 255, 0, SDL_ALPHA_OPAQUE), 5);
 		//points[0].x = 15;
@@ -36,12 +33,12 @@ void drawPointCloud(SDL_Renderer* renderer) {
 	}
 }
 
-void drawMyPoint(SDL_Renderer* renderer) {
+void drawMyPoint(SDL_Renderer* renderer, Point& myPoint) {
 	myPoint.draw(renderer, Color(255, 0, 0, SDL_ALPHA_OPAQUE), 15);
 }
 
-void updatePointCloud(SDL_Event event) {
-	for (int i = 0; i < 100; i++) {
+void updatePointCloud(SDL_Event& event, Point points[]) {
+	for (int i = 0; i < MAX_POINTS; i++) { //For each
 		points[i].update(event);
 	}
 }
@@ -54,51 +51,47 @@ double sqrDistance(Point a, Point b) {
 	return sqrDistance;
 }
 
-int nearestPointIndex() {
+int nearestPointIndex(Point points[], Point& myPoint) {
 	double minDistance = sqrDistance(points[0], myPoint);
 	int minIndex = -1;
-	int currentIndex = 0;
-	for (Point pointToTest : points)
+	for (int i = 0; i < MAX_POINTS; i++)  //for loop
 	{
-		double pointToTestDistance = sqrDistance(pointToTest, myPoint);
+		double pointToTestDistance = sqrDistance(points[i], myPoint);
 		if ( pointToTestDistance < minDistance) {
 			minDistance = pointToTestDistance;
-			minIndex = currentIndex;
+			minIndex = i;
 		}
-		currentIndex += 1;
 	}
 	return minIndex;
 }
 
-void updateNearestPoint(int index, SDL_Renderer* renderer) {
+void updateNearestPoint(int index, SDL_Renderer* renderer, Point points[], Point& myPoint) {
 	Point nearestPoint = points[index];
 	nearestPoint.drawCircle(renderer, 25, Color(255, 0, 0, SDL_ALPHA_OPAQUE), true);
 	SDL_RenderDrawLine(renderer, myPoint.x, myPoint.y, nearestPoint.x, nearestPoint.y);
 }
 
-int farthestPointIndex() {
+int farthestPointIndex(Point points[], Point& myPoint) {
 	double maxDistance = sqrDistance(points[0], myPoint);
 	int maxIndex = -1;
-	int currentIndex = 0;
-	for (Point pointToTest : points) {
-		double pointToTestDistance = sqrDistance(pointToTest, myPoint);
+	for (int i = 0; i < MAX_POINTS; i++) {
+		double pointToTestDistance = sqrDistance(points[i], myPoint);
 		if (pointToTestDistance > maxDistance) {
 			maxDistance = pointToTestDistance;
-			maxIndex = currentIndex;
+			maxIndex = i;
 		}
-		currentIndex += 1;
 	}
 	return maxIndex;
 }
 
-void updateFarthestPoint(int index, SDL_Renderer* renderer) {
+void updateFarthestPoint(int index, SDL_Renderer* renderer, Point points[], Point& myPoint) {
 	Point farthestPoint = points[index];
 	farthestPoint.drawCircle(renderer, 25, Color(0, 0, 255, SDL_ALPHA_OPAQUE), true);
 	SDL_RenderDrawLine(renderer, myPoint.x, myPoint.y, farthestPoint.x, farthestPoint.y);
 }
 
 
-void start(SDL_Renderer* renderer) {
+void start(SDL_Renderer* renderer, Point points[], Point& myPoint) {
 	bool end = false;
 	while (!end) {
 		//	paint window in black (clear)
@@ -106,23 +99,23 @@ void start(SDL_Renderer* renderer) {
 		SDL_RenderClear(renderer);
 
 		//	- draw any desired graphical objects here
-		drawMyPoint(renderer);
-		drawPointCloud(renderer);
+		drawMyPoint(renderer, myPoint);
+		drawPointCloud(renderer, points);
 		SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
 
 		//	****************  //
 		//	event management  //
 		//	****************  //
 
-		updateNearestPoint(nearestPointIndex(), renderer);
-		updateFarthestPoint(farthestPointIndex(), renderer);
+		updateNearestPoint(nearestPointIndex(points, myPoint), renderer, points, myPoint);
+		updateFarthestPoint(farthestPointIndex(points, myPoint), renderer, points, myPoint);
 
 		//	- remove next event from queue
 		SDL_Event event;
 		SDL_PollEvent(&event);
 
 		//	- give event to objects for update if needed
-		updatePointCloud(event);
+		updatePointCloud(event, points);
 		myPoint.update(event);
 
 		//	*********************  //
@@ -152,8 +145,14 @@ int main(int argc, char** argv) {
 	fenetre = SDL_CreateWindow("SDL template", 200, 100, WIDTH, HEIGHT, 0);
 	renderer = SDL_CreateRenderer(fenetre, 0, 0);
 #pragma endregion
-	placePointCloud();
-	start(renderer);
+	//Le nuage de points
+	Point points[MAX_POINTS];
+
+	//Mon point à tester
+	Point myPoint(0, 0, true);
+
+	placePointCloud(points, myPoint);
+	start(renderer, points, myPoint);
 
 #pragma region SDL quit
 	//	destroy window and quit SDL
