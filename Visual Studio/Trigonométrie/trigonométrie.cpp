@@ -6,7 +6,7 @@ using namespace std;
 #include "../lib_Point/Point.h"
 
 
-constexpr auto WIDTH = 1600;
+constexpr auto WIDTH = 600;
 constexpr auto HEIGHT = 600;
 
 SDL_Renderer* init_SDL(const char* title) {
@@ -23,11 +23,32 @@ SDL_Renderer* init_SDL(const char* title) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	window = SDL_CreateWindow(title, 200, 500, WIDTH, HEIGHT, 0);
+	window = SDL_CreateWindow(title, 200, 200, WIDTH, HEIGHT, 0);
 	return SDL_CreateRenderer(window, 0, 0);
 #pragma endregion
 }
+void clearWindow(SDL_Renderer* renderer) {
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(renderer);
+}
+SDL_Event getNextEvent() {
+	SDL_Event event;
+	SDL_PollEvent(&event);
 
+	return event;
+}
+bool keypressed(SDL_Event& event, char key) {
+	return event.type == SDL_KEYDOWN && event.key.keysym.sym == key;
+}
+void showRenderingBuffer(SDL_Renderer* renderer) {
+	SDL_RenderPresent(renderer);
+}
+void quit_SDL() {
+#pragma region SDL quit
+	//	quit SDL
+	SDL_Quit();
+#pragma endregion
+}
 
 double calculerAngle(const Vector& u, const Vector& v) {
 
@@ -69,7 +90,7 @@ double calculerD(double alpha, double beta, double distanceEntreDeuxPersonnes)
 	double alphaRadian = alpha * M_PI / 180;
 	double betaRadian = beta * M_PI / 180;
 
-	//En utilisant la loi des sinus
+	//En utilisant la loi des sinus: sin (Teta) / L = sin (alpha) / BC
 	double hypoténuseBeta = sin(alphaRadian) * distanceEntreDeuxPersonnes
 		/ sin(M_PI - (alphaRadian + betaRadian));
 	
@@ -78,41 +99,87 @@ double calculerD(double alpha, double beta, double distanceEntreDeuxPersonnes)
 
 int main(int argc, char** argv) {
 
-//SDL_Renderer* renderer = init_SDL("Trace de fonctions");
+SDL_Renderer* renderer = init_SDL("Trace de fonctions");
 
-
+	/*	prepare useful objects here	*/
 #pragma region Angle formé par deux vecteurs
 	//Le vecteur u est formé par les deux points A et B. A est l'origine
-	Point pointA(0,0,true);
-	Point pointB(15, 5, true);
-	//Création du vecteur u
-	Vector u = Vector(pointA, pointB);
-	
-	//Le vecteur v est formé par les deux points A et C.
-	Point pointC(7, 200, true);
-	//Création du vecteur v
-	Vector v = Vector(pointA, pointC);
+Point pointA(0, 0, true);
+Point pointB(150, 50, true);
+Point pointC(70, 200, true);
+////Création du vecteur u
+//Vector u = Vector(pointA, pointB);
+//
+////Le vecteur v est formé par les deux points A et C.
+////Création du vecteur v
+//Vector v = Vector(pointA, pointC);
 
-	//Calcul de l'angle
-	//cout << calculerAngle(u, v) << endl;
+//Calcul de l'angle
+//cout << calculerAngle(u, v) << endl;
 #pragma endregion
-	
+
 #pragma region Calcul hauteur de la tour
-	//Calcul de la hauteur du tour
-	double alphaDegré = 60;
-	double hauteurPersonne = 1.78;
-	double distanceAuTour = 15;
-	//cout << calculerHauteur(alphaDegré, hauteurPersonne, distanceAuTour) << endl;
+//Calcul de la hauteur du tour
+double alphaDegré = 60;
+double hauteurPersonne = 1.78;
+double distanceAuTour = 15;
+//cout << calculerHauteur(alphaDegré, hauteurPersonne, distanceAuTour) << endl;
 #pragma endregion
-
 
 #pragma region Calcul de la distance d: bateau - port
-	double distanceEntreDeuxPersonnes = 100;
-	double alpha = 40;
-	double beta = 40;
-	cout << calculerD(alpha, beta, distanceEntreDeuxPersonnes) << endl;
+double distanceEntreDeuxPersonnes = 100;
+double alpha = 40;
+double beta = 40;
+//cout << calculerD(alpha, beta, distanceEntreDeuxPersonnes) << endl;
 #pragma endregion
 
+	//	*********  //
+	//	main loop  //
+	//	*********  //
+	bool endOfGame = false;
+
+	while (!endOfGame) {
+		//	******************************  //
+		//	draw image in rendering buffer  //
+		//	******************************  //
+		clearWindow(renderer);
+
+		/*	draw any desired graphical objects here	*/
+		//	show drawing window
+
+		//Affichage des points A,B,C
+		pointA.draw(renderer, Color(255, 0, 0, SDL_ALPHA_OPAQUE), 5);
+		pointB.draw(renderer, Color(255, 0, 0, SDL_ALPHA_OPAQUE), 5);
+		pointC.draw(renderer, Color(255, 0, 0, SDL_ALPHA_OPAQUE), 5);
+
+		//Création du vecteur u
+		Vector u = Vector(pointA, pointB);
+		//Création du vecteur v
+		Vector v = Vector(pointA, pointC);
+
+		//Display vector 
+		SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
+		SDL_RenderDrawLine(renderer, pointA.x, pointA.y, pointB.x, pointB.y);
+		SDL_RenderDrawLine(renderer, pointA.x, pointA.y, pointC.x, pointC.y);
+
+		//Compute angle (u,v) realtime
+		cout << calculerAngle(u, v) << endl;
+
+		//	****************  //
+		//	event management  //
+		//	****************  //
+		SDL_Event event = getNextEvent();
+
+		/*	give event to objects for update if needed here	*/
+		pointA.update(event);
+		pointB.update(event);
+		pointC.update(event);
+		
+		showRenderingBuffer(renderer);
+		endOfGame = keypressed(event, 'q');
+	}
+
+	quit_SDL();
 	
 	return 0;
 }
