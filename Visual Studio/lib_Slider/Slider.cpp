@@ -20,6 +20,18 @@ void Slider::setValue(double value) {
 	}
 }
 
+void Slider::setMin(double min) {
+	if (min <= this->max) {
+		this->min = min;
+	}
+}
+
+void Slider::setMax(double max) {
+	if (max >= this->min) {
+		this->max = max;
+	}
+}
+
 void Slider::setCursorPosition(int pos) {
 	if (pos >= this->x && pos <= this->x + this->width) {
 		this->pos = pos;

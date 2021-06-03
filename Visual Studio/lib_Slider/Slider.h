@@ -22,6 +22,8 @@ private:
 public:
 	Slider(int x, int y, int width, double min, double max, double value);
 	void setValue(double value);
+	void setMin(double min);
+	void setMax(double max);
 	double getValue();
 	double draw(SDL_Renderer *renderer, SDL_Event &evt);
 };

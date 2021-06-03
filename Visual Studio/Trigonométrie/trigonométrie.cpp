@@ -83,8 +83,6 @@ double calculerHauteur(double& alpha, double& hauteurPersonne, double& distanceA
 }
 
 
-
-
 double calculerD(double alpha, double beta, double distanceEntreDeuxPersonnes)
 {
 	double alphaRadian = alpha * M_PI / 180;
