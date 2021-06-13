@@ -23,6 +23,7 @@
     <ProjectGuid>{33657CCE-7E21-4859-B65D-D97D28E7B910}</ProjectGuid>
     <RootNamespace>1. deplacement point</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>8-Simulation d'un rebond2</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -50,7 +50,7 @@ void GameObject::update(SDL_Event& event, double& initialDistanceInX, double& in
 
 	//	compute sum of forces pallyed on object
 	Vector gravity(0, 0 * this->mass);
-	double initialLength = sqrt(initialDistanceInX * initialDistanceInX + initialDistanceInX * initialDistanceInY);
+	double initialLength = sqrt(initialDistanceInX * initialDistanceInX + initialDistanceInY * initialDistanceInY);
 	double distanceAB = this->getABDistance();
 	Vector fRappelA(0, 0);
 

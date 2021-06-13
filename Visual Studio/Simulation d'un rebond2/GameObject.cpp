@@ -83,7 +83,6 @@ void GameObject::setSpeed(Slider* speedX, Slider* speedY)
 	this->speed.x = sgn(getSpeedX()) * speedX->getValue();
 	this->speed.y = sgn(getSpeedY()) * speedY->getValue();
 
-
 }
 
 

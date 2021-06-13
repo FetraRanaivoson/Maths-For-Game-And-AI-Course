@@ -23,6 +23,7 @@
     <ProjectGuid>{43D0A259-BB76-40C8-802E-FE63382322C8}</ProjectGuid>
     <RootNamespace>Cloudexample</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>2-Point le plus proche</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

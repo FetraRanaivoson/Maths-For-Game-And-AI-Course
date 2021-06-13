@@ -3,20 +3,17 @@ using namespace std;
 
 #include <SDL.h>
 
-constexpr auto MAX_OBJECTS = 10;
 
 //	****************  //
 //	window attributs  //
 //	****************  //
 //	- position and size on screen
-constexpr auto POS_X = 500, POS_Y = 200;
-constexpr auto WIDTH = 600, HEIGHT = 900;
-
-
+constexpr auto POS_X = 500, POS_Y = 300;
+constexpr auto WIDTH = 800, HEIGHT = 600;
 
 //	include desired header files for libraries
-#include "GameObject.h"
-#include <time.h>
+#include "../lib_Point/Point.h"
+#include "../lib_Slider/Slider.h"
 
 
 SDL_Renderer* init_SDL(const char* title) {
@@ -29,7 +26,6 @@ SDL_Renderer* init_SDL(const char* title) {
 		exit(0);
 	}
 
-	//SDL_ShowCursor(SDL_DISABLE);	//	hide mouse cursor
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
@@ -65,17 +61,40 @@ void quit_SDL() {
 #pragma endregion
 }
 
-//	entry point of application
+
+Point fromPlanToScreen(Point p,
+	double xMin, double xMax, double yMin, double yMax,
+	double xMinS, double xMaxS, double yMinS, double yMaxS) {
+
+	double x = xMinS + (p.x - xMin) * (xMaxS - xMinS) / (xMax - xMin);
+	double y = yMinS + (yMax - p.y) * (yMaxS - yMinS) / (yMax - yMin);
+
+	Point result(x, y);
+
+	return result;
+}
+
+void placeSliders(Slider* sliders[])
+{
+	for (int i = 0; i < 12; i++) {
+		int x = 30 + (i / 2) * (200 + 30);
+		int y = HEIGHT - 100 + (i % 2) * 30;
+		sliders[i] = new Slider(x, y, 200, 0, 1000, 50);
+	}
+}
+
+
+void UpdateSliders(Slider* sliders[], SDL_Renderer* renderer, SDL_Event& event)
+{
+	for (int i = 0; i < 2; i++)
+		sliders[i]->draw(renderer, event);
+}
+
+
 int main(int argc, char** argv) {
-	SDL_Renderer* renderer = init_SDL("SLD template");	//	this object will draw in our window
+	SDL_Renderer* renderer = init_SDL("Quiz1");	//	this object will draw in our window
 
 	/*	prepare useful objects here	*/
-	GameObject objects(3, Point(WIDTH/4, HEIGHT/4, true), Point(WIDTH/2, HEIGHT/2, true), Vector(0, 0), Vector(0,0), WIDTH, HEIGHT);
-	double initialDistanceInX = objects.getABDistanceInX();
-	double initialDistanceInY = objects.getABDistanceInY();
-
-
-	long time = clock();
 
 	//	*********  //
 	//	main loop  //
@@ -88,27 +107,22 @@ int main(int argc, char** argv) {
 		clearWindow(renderer);
 
 		/*	draw any desired graphical objects here	*/
+		//	show drawing window
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+	
 
 		//	****************  //
 		//	event management  //
 		//	****************  //
-
-
 		SDL_Event event = getNextEvent();
 
-		//if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_DOWN )
-		objects.draw(renderer, Color(255, 255, 255, SDL_ALPHA_OPAQUE), event, initialDistanceInX, initialDistanceInY);
-
+		/*	give event to objects for update if needed here	*/
 
 		showRenderingBuffer(renderer);
 		endOfGame = keypressed(event, 'q');
-
-		SDL_KeyCode;
 	}
 
-	time = clock() - time;
-
 	quit_SDL();
-
 	return 0;
 }
+

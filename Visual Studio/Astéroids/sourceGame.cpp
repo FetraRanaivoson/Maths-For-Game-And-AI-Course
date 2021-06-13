@@ -11,13 +11,14 @@ constexpr auto MAX_OBJECTS = 10;
 //	- position and size on screen
 constexpr auto POS_X = 500, POS_Y = 200;
 constexpr auto WIDTH = 600, HEIGHT = 700;
-
+constexpr auto MAX_ASTEROIDS = 25;
 
 
 //	include desired header files for libraries
 #include "VaisseauObject.h"
+#include "Asteroid.h"
 #include <time.h>
-#include "Astéroids.h"
+#include "sourceGame.h"
 
 
 SDL_Renderer* init_SDL(const char* title) {
@@ -66,30 +67,15 @@ void quit_SDL() {
 #pragma endregion
 }
 
-void manageKeysInput(SDL_Renderer* renderer, SDL_Event& event, VaisseauObject& vaisseau)
-{
-	//KEY MANAGEMENT
-	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_DOWN) {
-		Vector newSpeed(0, 500);
-		vaisseau.setSpeed(newSpeed);
-	}
-	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_UP) {
-		Vector newSpeed(0, -500);
-		vaisseau.setSpeed(newSpeed);
-	}
-	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_LEFT) {
-		Vector newSpeed(-500, 0);
-		vaisseau.setSpeed(newSpeed);
-	}
-	if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_RIGHT) {
-		Vector newSpeed(500, 0);
-		vaisseau.setSpeed(newSpeed);
-	}
-	
 
-	if (event.type == SDL_KEYUP) {
-		Vector newSpeed(0, 0);
-		vaisseau.setSpeed(newSpeed);
+void CreateAndRandomizeAsteroids(Asteroid* asteroids[25])
+{
+	for (int i = 0; i < MAX_ASTEROIDS; i++) {
+		asteroids[i] = new Asteroid(Point(rand() % WIDTH + 1, rand() % HEIGHT / 10 + 1),	//Position
+			Vector(rand() % 50, rand() % 150),	//Speed
+			20,													//radius
+			200,												//mass
+			WIDTH, HEIGHT);
 	}
 }
 
@@ -98,8 +84,11 @@ int main(int argc, char** argv) {
 	SDL_Renderer* renderer = init_SDL("Asteroid game");	//	this object will draw in our window
 
 	/*	prepare useful objects here	*/
-	VaisseauObject vaisseau(100, Point(WIDTH/2, HEIGHT/2, true), Vector(0, 0), Vector(0,1000), WIDTH, HEIGHT);
+	srand((unsigned int)time(NULL));
+	VaisseauObject vaisseau(100, 0.0, 25, Point(WIDTH / 2, HEIGHT - 100, true), WIDTH, HEIGHT);
 
+	Asteroid* asteroids[MAX_ASTEROIDS];
+	CreateAndRandomizeAsteroids(asteroids);
 
 	long time = clock();
 
@@ -121,16 +110,29 @@ int main(int argc, char** argv) {
 		SDL_Event event = getNextEvent();
 
 		vaisseau.draw(renderer, Color(255, 255, 255, SDL_ALPHA_OPAQUE), event);
-		manageKeysInput(renderer, event, vaisseau);
-
-		//if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_UP) {
-			//vaisseau.fireLaser(renderer, Color(255, 255, 255, SDL_ALPHA_OPAQUE), event);
-		//}
-
+		for (int i = 0; i < MAX_ASTEROIDS; i++) {
+			asteroids[i]->draw(renderer, Color(244, 244, 244, SDL_ALPHA_OPAQUE), event);
+		}
+		for (int i = 0; i < MAX_ASTEROIDS; i++) {
+			if (asteroids[i]->isHitBy(vaisseau)) {
+				asteroids[i]->decrementRadius(asteroids[i]->getRadius() -= 5);
+				int signX = rand() % 2;
+				int signY = rand() % 2;
+				(signX == 0) ? signX = -1, signY = 1 : signX = 1, signY = -1;
+				(signY == 0) ? signX = -1, signY = 1 : signX = 1, signY = -1;
+				Vector newSpeed(-signX * rand()%500, - signY * rand()%500);
+				asteroids[i]->setSpeed(newSpeed);
+			}
+		}
+		for (int i = 0; i < MAX_ASTEROIDS; i++) {
+			if (asteroids[i]->Hit(vaisseau)) {
+				quit_SDL();
+			}
+		}
 
 		showRenderingBuffer(renderer);
-		endOfGame = keypressed(event, 'q');
-		SDL_KeyCode;
+		endOfGame = keypressed(event, '\033');
+		//SDL_KeyCode;
 	}
 
 	time = clock() - time;

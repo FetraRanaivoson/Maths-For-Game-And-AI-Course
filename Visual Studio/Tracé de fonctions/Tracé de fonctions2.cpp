@@ -275,7 +275,7 @@ void DessinerLesRepères(SDL_Renderer* renderer, const Point& originPlan, double 
 	SDL_RenderDrawLine(renderer, originScreen.x, yMinS, originScreen.x, yMaxS);
 }
 
-void ListenToScreenQuashAndStretch(double& xMinS, double& xMaxS, Slider* sliders[], double& yMinS, double& yMaxS)
+void ListenToScreenSquashAndStretch(double& xMinS, double& xMaxS, Slider* sliders[], double& yMinS, double& yMaxS)
 {
 	//Listen to screen Squash & stretch
 	if (xMinS <= xMaxS) {
@@ -352,7 +352,7 @@ int main(int argc, char** argv) {
 		displayLinearFunction(xMin, xMax, sliders, yMin, yMax, renderer, xMinS, xMaxS, yMinS, yMaxS);
 		displayExponentFunction(xMin, xMax, sliders, yMin, yMax, renderer, xMinS, xMaxS, yMinS, yMaxS);
 
-		ListenToScreenQuashAndStretch(xMinS, xMaxS, sliders, yMinS, yMaxS);
+		ListenToScreenSquashAndStretch(xMinS, xMaxS, sliders, yMinS, yMaxS);
 
 		//	****************  //
 		//	event management  //

@@ -41,29 +41,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Math", "3. Math", "{7D96
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CircleAndSlider", "EX\SDL template.vcxproj", "{374C0711-BCBB-4009-93FA-8475DE4BBAD4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlacementDeRectangle", "Placement de rectangle\PlacementDeRectangle.vcxproj", "{BBB45963-0440-4FE7-8093-CE7496CBAD9A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "1-PlacementDeRectangle", "Placement de rectangle\PlacementDeRectangle.vcxproj", "{BBB45963-0440-4FE7-8093-CE7496CBAD9A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Point le plus proche", "Point le plus proche\Point le plus proche.vcxproj", "{43D0A259-BB76-40C8-802E-FE63382322C8}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2-Point le plus proche", "Point le plus proche\Point le plus proche.vcxproj", "{43D0A259-BB76-40C8-802E-FE63382322C8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exercises", "Exercises", "{BBD33A5E-F68B-41C2-BEFD-3994E1786999}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Point le plus proche Méthode Point", "Point le plus proche Méthode Point\Point le plus proche Méthode Point.vcxproj", "{A25232D8-6770-47B4-BEEE-4277F440128F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3-Point le plus proche Méthode Point", "Point le plus proche Méthode Point\Point le plus proche Méthode Point.vcxproj", "{A25232D8-6770-47B4-BEEE-4277F440128F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tracé de fonctions", "Tracé de fonctions\Tracé de fonctions.vcxproj", "{1D5369C7-5268-4089-82A1-3F1EC3F993F7}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "5-Tracé de fonctions", "Tracé de fonctions\Tracé de fonctions.vcxproj", "{1D5369C7-5268-4089-82A1-3F1EC3F993F7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Trigonométrie", "Trigonométrie\Trigonométrie.vcxproj", "{3975A5DE-6647-4EED-8927-8CBC409F19DC}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4-Trigonométrie", "Trigonométrie\Trigonométrie.vcxproj", "{3975A5DE-6647-4EED-8927-8CBC409F19DC}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fonction cercle", "Fonction cercle\Fonction cercle.vcxproj", "{EDAA2885-941B-49D1-8E2A-8258FD8751C4}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "6-Fonction cercle", "Fonction cercle\Fonction cercle.vcxproj", "{EDAA2885-941B-49D1-8E2A-8258FD8751C4}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Quiz1", "Quiz1\Quiz1.vcxproj", "{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7-Simulation d'un rebond", "Simulation d'un rebond\Simulation d'un rebond.vcxproj", "{65C7D9E7-E57A-410C-99FC-37C37F2A82A3}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Simulation d'un rebond", "Simulation d'un rebond\Simulation d'un rebond.vcxproj", "{65C7D9E7-E57A-410C-99FC-37C37F2A82A3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "8-Simulation d'un rebond2", "Simulation d'un rebond2\Simulation d'un rebond2.vcxproj", "{33657CCE-7E21-4859-B65D-D97D28E7B910}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Simulation d'un rebond2", "Simulation d'un rebond2\Simulation d'un rebond2.vcxproj", "{33657CCE-7E21-4859-B65D-D97D28E7B910}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "9-Elastique", "Elastique\Elastique.vcxproj", "{4952172E-1FB6-424A-A9EE-9C868E0C8BED}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Elastique", "Elastique\Elastique.vcxproj", "{4952172E-1FB6-424A-A9EE-9C868E0C8BED}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Astéroids", "Astéroids\Astéroids.vcxproj", "{370AEFB7-8691-409E-B276-155DA89AE2E0}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10-Astéroids", "Astéroids\Astéroids.vcxproj", "{370AEFB7-8691-409E-B276-155DA89AE2E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -235,16 +233,6 @@ Global
 		{EDAA2885-941B-49D1-8E2A-8258FD8751C4}.Release|x64.Build.0 = Release|x64
 		{EDAA2885-941B-49D1-8E2A-8258FD8751C4}.Release|x86.ActiveCfg = Release|Win32
 		{EDAA2885-941B-49D1-8E2A-8258FD8751C4}.Release|x86.Build.0 = Release|Win32
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Debug|x64.ActiveCfg = Debug|x64
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Debug|x64.Build.0 = Debug|x64
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Debug|x86.ActiveCfg = Debug|Win32
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Debug|x86.Build.0 = Debug|Win32
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Release|Any CPU.ActiveCfg = Release|Win32
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Release|x64.ActiveCfg = Release|x64
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Release|x64.Build.0 = Release|x64
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Release|x86.ActiveCfg = Release|Win32
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E}.Release|x86.Build.0 = Release|Win32
 		{65C7D9E7-E57A-410C-99FC-37C37F2A82A3}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{65C7D9E7-E57A-410C-99FC-37C37F2A82A3}.Debug|x64.ActiveCfg = Debug|x64
 		{65C7D9E7-E57A-410C-99FC-37C37F2A82A3}.Debug|x64.Build.0 = Debug|x64
@@ -313,7 +301,6 @@ Global
 		{1D5369C7-5268-4089-82A1-3F1EC3F993F7} = {BBD33A5E-F68B-41C2-BEFD-3994E1786999}
 		{3975A5DE-6647-4EED-8927-8CBC409F19DC} = {BBD33A5E-F68B-41C2-BEFD-3994E1786999}
 		{EDAA2885-941B-49D1-8E2A-8258FD8751C4} = {BBD33A5E-F68B-41C2-BEFD-3994E1786999}
-		{23FA2DBF-4889-4A36-A35F-DBD1B98C970E} = {BBD33A5E-F68B-41C2-BEFD-3994E1786999}
 		{65C7D9E7-E57A-410C-99FC-37C37F2A82A3} = {BBD33A5E-F68B-41C2-BEFD-3994E1786999}
 		{33657CCE-7E21-4859-B65D-D97D28E7B910} = {BBD33A5E-F68B-41C2-BEFD-3994E1786999}
 		{4952172E-1FB6-424A-A9EE-9C868E0C8BED} = {BBD33A5E-F68B-41C2-BEFD-3994E1786999}

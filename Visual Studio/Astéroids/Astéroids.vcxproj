@@ -23,6 +23,7 @@
     <ProjectGuid>{370AEFB7-8691-409E-B276-155DA89AE2E0}</ProjectGuid>
     <RootNamespace>1. deplacement point</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>10-Astéroids</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -121,8 +122,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Astéroids.cpp" />
-    <ClCompile Include="Laser.cpp" />
+    <ClCompile Include="Asteroid.cpp" />
+    <ClCompile Include="sourceGame.cpp" />
     <ClCompile Include="VaisseauObject.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -134,8 +135,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Astéroids.h" />
-    <ClInclude Include="Laser.h" />
+    <ClInclude Include="Asteroid.h" />
+    <ClInclude Include="sourceGame.h" />
     <ClInclude Include="VaisseauObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

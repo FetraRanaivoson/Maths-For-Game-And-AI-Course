@@ -10,13 +10,15 @@ constexpr auto MAX_OBJECTS = 10;
 //	****************  //
 //	- position and size on screen
 constexpr auto POS_X = 500, POS_Y = 200;
-constexpr auto WIDTH = 600, HEIGHT = 900;
-
+constexpr auto WIDTH = 600, HEIGHT = 700;
+constexpr auto MAX_ASTEROIDS = 25;
 
 
 //	include desired header files for libraries
-#include "GameObject.h"
+#include "VaisseauObject.h"
+#include "Asteroid.h"
 #include <time.h>
+#include "sourceGame.h"
 
 
 SDL_Renderer* init_SDL(const char* title) {
@@ -65,15 +67,28 @@ void quit_SDL() {
 #pragma endregion
 }
 
+
+void CreateAndRandomizeAsteroids(Asteroid* asteroids[25])
+{
+	for (int i = 0; i < MAX_ASTEROIDS; i++) {
+		asteroids[i] = new Asteroid(Point(rand() % WIDTH + 1, rand() % HEIGHT / 10 + 1),	//Position
+			Vector(rand() % 50, rand() % 150),	//Speed
+			20,													//radius
+			200,												//mass
+			WIDTH, HEIGHT);
+	}
+}
+
 //	entry point of application
 int main(int argc, char** argv) {
-	SDL_Renderer* renderer = init_SDL("SLD template");	//	this object will draw in our window
+	SDL_Renderer* renderer = init_SDL("Asteroid game");	//	this object will draw in our window
 
 	/*	prepare useful objects here	*/
-	GameObject objects(3, Point(WIDTH/4, HEIGHT/4, true), Point(WIDTH/2, HEIGHT/2, true), Vector(0, 0), Vector(0,0), WIDTH, HEIGHT);
-	double initialDistanceInX = objects.getABDistanceInX();
-	double initialDistanceInY = objects.getABDistanceInY();
+	srand((unsigned int)time(NULL));
+	VaisseauObject vaisseau(100, 0.0, 25, Point(WIDTH / 2, HEIGHT - 100, true), WIDTH, HEIGHT);
 
+	Asteroid* asteroids[MAX_ASTEROIDS];
+	CreateAndRandomizeAsteroids(asteroids);
 
 	long time = clock();
 
@@ -92,18 +107,32 @@ int main(int argc, char** argv) {
 		//	****************  //
 		//	event management  //
 		//	****************  //
-
-
 		SDL_Event event = getNextEvent();
 
-		//if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_DOWN )
-		objects.draw(renderer, Color(255, 255, 255, SDL_ALPHA_OPAQUE), event, initialDistanceInX, initialDistanceInY);
-
+		vaisseau.draw(renderer, Color(255, 255, 255, SDL_ALPHA_OPAQUE), event);
+		for (int i = 0; i < MAX_ASTEROIDS; i++) {
+			asteroids[i]->draw(renderer, Color(244, 244, 244, SDL_ALPHA_OPAQUE), event);
+		}
+		for (int i = 0; i < MAX_ASTEROIDS; i++) {
+			if (asteroids[i]->isHitBy(vaisseau)) {
+				asteroids[i]->decrementRadius(asteroids[i]->getRadius() -= 5);
+				int signX = rand() % 2;
+				int signY = rand() % 2;
+				(signX == 0) ? signX = -1, signY = 1 : signX = 1, signY = -1;
+				(signY == 0) ? signX = -1, signY = 1 : signX = 1, signY = -1;
+				Vector newSpeed(-signX * rand()%500, - signY * rand()%500);
+				asteroids[i]->setSpeed(newSpeed);
+			}
+		}
+		for (int i = 0; i < MAX_ASTEROIDS; i++) {
+			if (asteroids[i]->Hit(vaisseau)) {
+				quit_SDL();
+			}
+		}
 
 		showRenderingBuffer(renderer);
-		endOfGame = keypressed(event, 'q');
-
-		SDL_KeyCode;
+		endOfGame = keypressed(event, '\033');
+		//SDL_KeyCode;
 	}
 
 	time = clock() - time;
