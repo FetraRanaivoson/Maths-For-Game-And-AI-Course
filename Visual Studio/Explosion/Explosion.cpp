@@ -42,6 +42,8 @@ void Explosion::update(SDL_Event& event)
 {
 	__time64_t currentUpdate = this->getTimeInNanoSeconds();
 
+	this->position.update(event);
+
 	//	compute elapsed time (in seconds) since last position change
 	double deltaT = (currentUpdate - this->lastUpdate) / 1e9;
 	this->lastUpdate = currentUpdate;
@@ -54,23 +56,34 @@ void Explosion::update(SDL_Event& event)
 
 	//	compute sum of forces played on the shock wave
 	double friction = this->computeFriction();
-	double magnitude = this->getMagnitude();
+	double magnitude = 0;
+
+	if (this->position.isDragged()) {
+		magnitude = this->getMagnitude(); //Activate the explosion when moved
+	}
+
 	double sum = magnitude + friction;
 
 	// compute new acceleration of the shock wave
 	this->acceleration = sum / this->mass;
 
-	/*if (magnitude == 0) {
-		cout << "magnitude  = 0" << endl;
-	}*/
 }
 
 double Explosion::getMagnitude()
 {
 				//f =      Yo         *   exp ( - k           *             d²  )
 	double magnitude = this->épicentre * exp(-this->lossFactor * this->radius * this->radius);
-	cout << magnitude << endl;
 	return magnitude;
+}
+
+Point Explosion::getPosition()
+{
+	return this->position;
+}
+
+double& Explosion::getRadius()
+{
+	return this->radius;
 }
 
 double Explosion::computeFriction()

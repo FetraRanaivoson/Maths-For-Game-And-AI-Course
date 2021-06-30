@@ -27,6 +27,8 @@ public:
 	void update(SDL_Event& event);
 
 	double getMagnitude();
+	Point getPosition();
+	double& getRadius();
 
 	double computeFriction();
 };

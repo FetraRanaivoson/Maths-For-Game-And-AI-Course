@@ -132,9 +132,12 @@
   <ItemGroup>
     <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="ExplosionSource.cpp" />
+    <ClCompile Include="PointObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Explosion.h" />
+    <ClInclude Include="ExplosionSource.h" />
+    <ClInclude Include="PointObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
