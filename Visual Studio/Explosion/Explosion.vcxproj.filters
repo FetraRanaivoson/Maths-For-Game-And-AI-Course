@@ -15,24 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="VaisseauObject.cpp">
+    <ClCompile Include="ExplosionSource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sourceGame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Asteroid.cpp">
+    <ClCompile Include="Explosion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VaisseauObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Asteroid.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sourceGame.h">
+    <ClInclude Include="Explosion.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

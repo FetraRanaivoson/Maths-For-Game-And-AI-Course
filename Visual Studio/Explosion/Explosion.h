@@ -1,75 +1,33 @@
 #pragma once
 
 #include "../lib_Point/Point.h"
-#include "../lib_Slider/Slider.h"
 
-
-
-class VaisseauObject {
+class Explosion
+{
 private:
-	double mass;
-	double turn; //angle en radian
-	double angles[3] = {0,150,210};
-	double radius;
-	Point centerPosition;
-	Point points[3];
+	Point position;
+	double radius; //d: Rayon de propagation de la force de l'épicentre
+	double épicentre;  //Fo: force au niveau de l'épicentre en Newton
+	double lossFactor; //k: force de déperdition de la puissance de l'explosion
 
+	double mass; //en kg
 
-	Vector speed;		//	in pixels per second
-	Vector propulsion;	//in pixels per second
-	Vector acceleration;	//	in pixels per second per second
-	Vector friction;	//	in pixels per second per second
-
-
-	bool isLaserAlive;
-	Point laser;
-	Vector laserSpeed;
+	double speed;
+	double acceleration;
 
 
 	__time64_t lastUpdate;	//	date in nanoseconds since last update
 	__time64_t getTimeInNanoSeconds();
 
-	int width, height;	//	limit of box
-
-
-	double sgn(double speed);
-
-	bool isBallHit = false;
-
 public:
-	//	constructor
-	//VaisseauObject();
-	VaisseauObject(double mass, double turn, double radius, Point centerPosition, int width, int height);
-	void update(SDL_Event& event);
-
-
-	void visualizeVectors(SDL_Renderer* renderer);
-
-	void modifyPositionInCase();
+	Explosion(Point position, double épicentre, double lossFactor);
 
 	void draw(SDL_Renderer* renderer, Color color, SDL_Event& event);
-	void DrawVaisseau(SDL_Renderer* renderer, const Color& color);
 
+	void update(SDL_Event& event);
 
-	Point getPosition();
-	Point* getPoints();
-	Vector& getSpeed();
-	
+	double getMagnitude();
 
-	Vector& getPropulsion();
-	Vector getVectorCenterToTip();
-	Vector& computeFriction();
-
-	void controlVaisseau(SDL_Event& event);
-	void setSpeed(Vector newSpeed);
-	void setAcceleration(Vector newAcceleration);/**/
-	void setPropulsion(Vector newPropulsion);
-	void incrementTurn(double turn); 
-
-
-	void fireLaser();
-	Point& getLaserPosition();
-
-
+	double computeFriction();
 };
 

@@ -20,9 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{370AEFB7-8691-409E-B276-155DA89AE2E0}</ProjectGuid>
+    <ProjectGuid>{481AAE9C-947B-4E64-8F3C-95E4AFCAB30F}</ProjectGuid>
     <RootNamespace>1. deplacement point</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>11-Explosion</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -121,11 +122,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Asteroid.cpp" />
-    <ClCompile Include="sourceGame.cpp" />
-    <ClCompile Include="VaisseauObject.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\lib_Point\lib_Point.vcxproj">
       <Project>{950467cb-52eb-404c-a207-2ac54eaee5de}</Project>
     </ProjectReference>
@@ -134,9 +130,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Asteroid.h" />
-    <ClInclude Include="sourceGame.h" />
-    <ClInclude Include="VaisseauObject.h" />
+    <ClCompile Include="Explosion.cpp" />
+    <ClCompile Include="ExplosionSource.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Explosion.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
