@@ -76,7 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\J02 Projets %28Maths for game%29\j02-e21-mai-fetra-ranaivoson\SDL2-2.0.12\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>C:\J02 Projets %28Maths for game%29\j02-e21-mai-fetra-ranaivoson\SDL2-2.0.12\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>Console</SubSystem>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
