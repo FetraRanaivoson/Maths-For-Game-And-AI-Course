@@ -2,7 +2,7 @@
 #include <time.h>
 #include <iostream>
 
-__time64_t GameObject::getTimeInNanoSeconds()
+__time64_t Perceptron::getTimeInNanoSeconds()
 {
 	struct _timespec64 ts;
 	if (_timespec64_get(&ts, TIME_UTC) == 0) {
@@ -13,7 +13,7 @@ __time64_t GameObject::getTimeInNanoSeconds()
 	//Nombre de nanosec écoulé depuis le 1er janvier 70
 }
 
-GameObject::GameObject(double mass, Point positionA, Point positionB, Vector speedA, Vector speedB, int width, int height)
+Perceptron::Perceptron(double mass, Point positionA, Point positionB, Vector speedA, Vector speedB, int width, int height)
 	: positionA(positionA), positionB(positionB), speedA(speedA), speedB(speedB), accelerationA(0, 0), accelerationB(0,0) {
 	this->mass = mass;
 	this->lastUpdate = this->getTimeInNanoSeconds();
@@ -22,7 +22,7 @@ GameObject::GameObject(double mass, Point positionA, Point positionB, Vector spe
 
 }
 
-void GameObject::update(SDL_Event& event, double& initialDistanceInX, double& initialDistanceInY) {
+void Perceptron::update(SDL_Event& event, double& initialDistanceInX, double& initialDistanceInY) {
 
 	__time64_t currentUpdate = this->getTimeInNanoSeconds();
 
@@ -76,21 +76,21 @@ void GameObject::update(SDL_Event& event, double& initialDistanceInX, double& in
 	
 }
 
-Point GameObject::getPositionA() {
+Point Perceptron::getPositionA() {
 	return this->positionA;
 }
 
-Point GameObject::getPositionB()
+Point Perceptron::getPositionB()
 {
 	return this->positionB;
 }
 
-double GameObject::ABInitialDistance(double& initialDistance)
+double Perceptron::ABInitialDistance(double& initialDistance)
 {
 	return initialDistance;
 }
 
-double GameObject::getABDistanceInX()
+double Perceptron::getABDistanceInX()
 {
 	double dx = this->positionA.x - this->positionB.x;
 	double distanceInX = sqrt(dx * dx);
@@ -98,14 +98,14 @@ double GameObject::getABDistanceInX()
 }
 
 
-double GameObject::getABDistanceInY()
+double Perceptron::getABDistanceInY()
 {
 	double dy = this->positionA.y - this->positionB.y;
 	double distanceInY = sqrt(dy * dy);
 	return distanceInY;
 }
 
-double GameObject::getABDistance()
+double Perceptron::getABDistance()
 {
 	double dx = this->positionA.x - this->positionB.x;
 	double dy = this->positionA.y - this->positionB.y;
@@ -114,25 +114,25 @@ double GameObject::getABDistance()
 }
 
 
-double GameObject::getSpeedX() {
+double Perceptron::getSpeedX() {
 	return this->speedA.x;
 }
 
-double GameObject::getSpeedY()
+double Perceptron::getSpeedY()
 {
 	return this->speedA.y;
 }
 
-void GameObject::setSpeed(Vector newSpeed) {
+void Perceptron::setSpeed(Vector newSpeed) {
 	this->speedA = newSpeed;
 }
 
-void GameObject::setAcceleration(Vector newAcceleration)
+void Perceptron::setAcceleration(Vector newAcceleration)
 {
 	this->accelerationA = newAcceleration;
 }
 
-void GameObject::draw(SDL_Renderer* renderer, Color color, SDL_Event& event, double& initialDistanceInX, double& initialDistanceInY) {
+void Perceptron::draw(SDL_Renderer* renderer, Color color, SDL_Event& event, double& initialDistanceInX, double& initialDistanceInY) {
 	this->update(event, initialDistanceInX, initialDistanceInY);
 
 	//	check borders of screen

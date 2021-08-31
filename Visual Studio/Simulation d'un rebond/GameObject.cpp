@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include <time.h>
 
-__time64_t GameObject::getTimeInNanoSeconds()
+__time64_t Perceptron::getTimeInNanoSeconds()
 {
 	struct _timespec64 ts;
 	if (_timespec64_get(&ts, TIME_UTC) == 0) {
@@ -10,7 +10,7 @@ __time64_t GameObject::getTimeInNanoSeconds()
 	return ts.tv_sec * 1000000000 + ts.tv_nsec;
 }
 
-GameObject::GameObject(double mass, Point position, Vector speed):positionA(position),speed(speed), acceleration(0,0)
+Perceptron::Perceptron(double mass, Point position, Vector speed):positionA(position),speed(speed), acceleration(0,0)
 {
 	//this->update();
 	this->mass = mass;
@@ -18,22 +18,22 @@ GameObject::GameObject(double mass, Point position, Vector speed):positionA(posi
 
 }
 
-Point GameObject::getPosition()
+Point Perceptron::getPosition()
 {
 	return positionA;
 }
 
-Vector GameObject::getSpeed()
+Vector Perceptron::getSpeed()
 {
 	return this->speed;
 }
 
-void GameObject::setSpeed(Vector newSpeed)
+void Perceptron::setSpeed(Vector newSpeed)
 {
 	this->speed = speed;
 }
 
-void GameObject::update()
+void Perceptron::update()
 {
 	this->lastUpdate = getTimeInNanoSeconds();
 
@@ -64,7 +64,7 @@ void GameObject::update()
 
 }
 
-void GameObject::draw(SDL_Renderer* renderer, Color color)
+void Perceptron::draw(SDL_Renderer* renderer, Color color)
 {
 	this->positionA.draw(renderer, color, 5);
 }

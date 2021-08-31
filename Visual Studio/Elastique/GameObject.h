@@ -3,7 +3,7 @@
 #include "../lib_Point/Point.h"
 #include "../lib_Slider/Slider.h"
 
-class GameObject {
+class Perceptron {
 private:
 	double mass;
 
@@ -26,7 +26,7 @@ private:
 
 public:
 	//	constructor
-	GameObject(double mass, Point positionA, Point positionB, Vector speedA, Vector speedB, int width, int height);
+	Perceptron(double mass, Point positionA, Point positionB, Vector speedA, Vector speedB, int width, int height);
 	void update(SDL_Event& event, double& initialDistanceInX, double& initialDistanceInY);
 
 	//	getters and setters

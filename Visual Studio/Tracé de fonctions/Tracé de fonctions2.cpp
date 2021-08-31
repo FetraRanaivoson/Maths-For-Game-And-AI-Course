@@ -155,7 +155,7 @@ void placeSliders(Slider* sliders[], double& xMinS, double& xMaxS, double& yMinS
 }
 
 
-Point fromPlanToScreen(Point p,
+Point pointFromPlanToScreen(Point p,
 	double xMin, double xMax, double yMin, double yMax,
 	double xMinS, double xMaxS, double yMinS, double yMaxS) {
 
@@ -181,6 +181,9 @@ double fonctionSpéciale(double x, Slider* sliders[]) {
 }
 
 double fonctionLinéaire(double x, Slider* sliders[]) {
+	//ax + by + t = 0;
+	//by = t - ax;
+	//y = (t - ax) / b; where t teta; a,b coeff; x,y point
 	return sliders[LINEAIRE_A]->getValue() * x + sliders[LINEAIRE_B]->getValue();
 }
 
@@ -195,7 +198,7 @@ void displayExponentFunction(double xMin, double xMax, Slider* sliders[], double
 		Point pPlan(x, fonctionExponentielle(x, sliders));
 
 		if (pPlan.y >= yMin && pPlan.y <= yMax) {
-			Point pScreen = fromPlanToScreen(pPlan,
+			Point pScreen = pointFromPlanToScreen(pPlan,
 				xMin, xMax, yMin, yMax,
 				xMinS, xMaxS, yMinS, yMaxS);
 			pScreen.draw(renderer, Color(255, 215, 0, SDL_ALPHA_OPAQUE), 3);
@@ -210,7 +213,7 @@ void displaySinusFunction(double xMin, double xMax, Slider* sliders[], double yM
 		Point pPlan(x, fonctionSinus(x, sliders));
 
 		if (pPlan.y >= yMin && pPlan.y <= yMax) {
-			Point pScreen = fromPlanToScreen(pPlan,
+			Point pScreen = pointFromPlanToScreen(pPlan,
 				xMin, xMax, yMin, yMax,
 				xMinS, xMaxS, yMinS, yMaxS);
 			pScreen.draw(renderer, Color(120, 255, 0, SDL_ALPHA_OPAQUE), 3);
@@ -225,7 +228,7 @@ void displayParabolicFunction(double xMin, double xMax, Slider* sliders[], doubl
 		Point pPlan1(x, fonctionParabole(x, sliders));
 
 		if (pPlan1.y >= yMin && pPlan1.y <= yMax) {
-			Point pScreen1 = fromPlanToScreen(pPlan1,
+			Point pScreen1 = pointFromPlanToScreen(pPlan1,
 				xMin, xMax, yMin, yMax,
 				xMinS, xMaxS, yMinS, yMaxS);
 			pScreen1.draw(renderer, Color(255, 0, 0, SDL_ALPHA_OPAQUE), 3);
@@ -240,7 +243,7 @@ void displaySpecialFunction(double xMin, double xMax, Slider* sliders[], double 
 		Point pPlan1(x, fonctionSpéciale(x, sliders));
 
 		if (pPlan1.y >= yMin && pPlan1.y <= yMax) {
-			Point pScreen1 = fromPlanToScreen(pPlan1,
+			Point pScreen1 = pointFromPlanToScreen(pPlan1,
 				xMin, xMax, yMin, yMax,
 				xMinS, xMaxS, yMinS, yMaxS);
 			pScreen1.draw(renderer, Color(125, 97, 35, SDL_ALPHA_OPAQUE), 3);
@@ -255,7 +258,7 @@ void displayLinearFunction(double xMin, double xMax, Slider* sliders[], double y
 		Point pPlan1(x, fonctionLinéaire(x, sliders));
 
 		if (pPlan1.y >= yMin && pPlan1.y <= yMax) {
-			Point pScreen1 = fromPlanToScreen(pPlan1,
+			Point pScreen1 = pointFromPlanToScreen(pPlan1,
 				xMin, xMax, yMin, yMax,
 				xMinS, xMaxS, yMinS, yMaxS);
 			pScreen1.draw(renderer, Color(0, 50, 255, SDL_ALPHA_OPAQUE), 3);
@@ -265,11 +268,11 @@ void displayLinearFunction(double xMin, double xMax, Slider* sliders[], double y
 }
 
 
-void DessinerLesRepères(SDL_Renderer* renderer, const Point& originPlan, double xMin, double xMax, double yMin, double yMax,
+void dessinerLesRepères(SDL_Renderer* renderer, const Point& originPlan, double xMin, double xMax, double yMin, double yMax,
 	double& xMinS, double& xMaxS, double& yMinS, double& yMaxS)
 {
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
-	Point originScreen = fromPlanToScreen(originPlan, xMin, xMax, yMin, yMax, xMinS, xMaxS, yMinS, yMaxS);
+	Point originScreen = pointFromPlanToScreen(originPlan, xMin, xMax, yMin, yMax, xMinS, xMaxS, yMinS, yMaxS);
 	originScreen.draw(renderer, Color(255, 255, 255, SDL_ALPHA_OPAQUE), 5);
 	SDL_RenderDrawLine(renderer, xMinS, originScreen.y, xMaxS, originScreen.y);
 	SDL_RenderDrawLine(renderer, originScreen.x, yMinS, originScreen.x, yMaxS);
@@ -343,7 +346,7 @@ int main(int argc, char** argv) {
 		SDL_RenderDrawRect(renderer, &rect);
 
 		//Dessiner les repères (0,x,y) du screen
-		DessinerLesRepères(renderer, originPlan, xMin, xMax, yMin, yMax, xMinS, xMaxS, yMinS, yMaxS);
+		dessinerLesRepères(renderer, originPlan, xMin, xMax, yMin, yMax, xMinS, xMaxS, yMinS, yMaxS);
 
 		//Display curves
 		displaySinusFunction(xMin, xMax, sliders, yMin, yMax, renderer, xMinS, xMaxS, yMinS, yMaxS);

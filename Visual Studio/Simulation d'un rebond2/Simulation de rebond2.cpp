@@ -90,11 +90,11 @@ int main(int argc, char** argv) {
 	Slider* sliders[2];
 	placeSliders(sliders);
 
-	GameObject* tabObjects[MAX_OBJECTS];
+	Perceptron* tabObjects[MAX_OBJECTS];
 	for (int i = 0; i < MAX_OBJECTS; i++) {
 		Point position(rand() % WIDTH, rand() % HEIGHT);
 		Vector speed(15 - rand() % 30, 15 - rand() % 30);
-		tabObjects[i] = new GameObject(5, position, speed, WIDTH, HEIGHT);
+		tabObjects[i] = new Perceptron(5, position, speed, WIDTH, HEIGHT);
 	}
 
 	long time = clock();

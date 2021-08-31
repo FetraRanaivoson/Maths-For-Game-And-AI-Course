@@ -1,6 +1,6 @@
 #pragma once
 #include "../lib_Point/Point.h"
-class GameObject
+class Perceptron
 {
 private:
 	Point positionA;
@@ -13,7 +13,7 @@ private:
 	__time64_t getTimeInNanoSeconds();
 
 public:
-	GameObject(double mass, Point position, Vector speed);
+	Perceptron(double mass, Point position, Vector speed);
 	Point getPosition();
 	Vector getSpeed();
 
