@@ -106,7 +106,7 @@ void Perceptron::addDog(int posX, int posY)
 
 void Perceptron::update(SDL_Renderer* renderer) {
 	do {
-		this->perceptronUpToDate = true;
+		//this->perceptronUpToDate = true;
 
 		for (int j = 0; j < candidates.size(); j++) {
 			std::vector<double> point; //pour store x, y d'un candidat
@@ -114,7 +114,7 @@ void Perceptron::update(SDL_Renderer* renderer) {
 			point.push_back(candidates[j].y);
 			output = this->learn(point, expectedType[j]);//somme des x,y 
 			if (!output)
-				perceptronUpToDate = false;
+				//perceptronUpToDate = false;
 
 			//drawing line 1st method
 			//for (double x = xMin; x <= xMax; x += .01) {
@@ -139,7 +139,7 @@ void Perceptron::update(SDL_Renderer* renderer) {
 			SDL_RenderDrawLineF(renderer, pScreenLow.x, pScreenLow.y, pScreenHigh.x, pScreenHigh.y);
 		}
 		SDL_RenderPresent(renderer);
-	} while (!perceptronUpToDate);
+	} while (!output);
 }
 
 double Perceptron::computeSum(std::vector<double> X)
