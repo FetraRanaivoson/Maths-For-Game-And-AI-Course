@@ -7,8 +7,9 @@
 #include "../lib_Point/Point.h"
 #include "SimplePoint.h"
 using namespace std;
-constexpr auto POS_X = 400, POS_Y = 75;
-constexpr auto WIDTH = 700, HEIGHT = 700;
+constexpr auto POS_X = 200, POS_Y = 75;
+constexpr auto WIDTH = 1200, HEIGHT = 700;
+constexpr auto MAX_POINTS = 20;
 
 
 SDL_Renderer* init_SDL(const char* title) {
@@ -74,10 +75,16 @@ int main(int argc, char** argv) {
 	srand(time(NULL));
 	SDL_Renderer* renderer = init_SDL("Interpolation");
 
-	Color pointColor(255, 255, 0, SDL_ALPHA_OPAQUE);
-	int pointSize = 25;
+	int pointSize = 7;
 	double alpha = .005;
-	SimplePoint* point = new SimplePoint(Vector(10, HEIGHT / 2), pointSize, alpha, pointColor);
+
+	std::vector<SimplePoint*> points;
+	for (int i = 0; i < MAX_POINTS; i++) {
+		double maxSpeed = rand() % 300 + 50.0;
+		double maxAcceleration = rand() % 350;
+		Color pointColor(rand() % 255, rand() % 255, rand() % 255, SDL_ALPHA_OPAQUE);
+		points.push_back(new SimplePoint(Vector(rand() % WIDTH, rand() % HEIGHT), pointSize, alpha, maxSpeed, maxAcceleration, pointColor));
+	}
 
 	int clickPosX, clickPosY;
 	Uint32 buttons;
@@ -89,13 +96,13 @@ int main(int argc, char** argv) {
 
 		SDL_PumpEvents();
 		buttons = SDL_GetMouseState(&clickPosX, &clickPosY);
-		
-		
-		//point->followSimple(renderer, clickPosX, clickPosY);
-		point->followRealistic(renderer, clickPosX, clickPosY);
-		point->draw(renderer);
-		
-		
+
+		for (SimplePoint* point : points) {
+			point->update();
+			point->followRealistic(renderer, Point(clickPosX, clickPosY));
+			point->draw(renderer);
+		}
+
 		showRenderingBuffer(renderer);
 		endOfGame = keypressed(event, 'q');
 	}

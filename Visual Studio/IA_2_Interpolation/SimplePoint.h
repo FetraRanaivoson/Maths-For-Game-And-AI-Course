@@ -9,10 +9,10 @@ private:
 	int size;
 	double alpha;
 
-	Vector vitesse;
+	Vector speed;
 	Vector acceleration;
 	double maxSpeed;
-	double targetSpeed;
+	double maxAcceleration;
 
 	Uint32 currentTime = 0;
 	Uint32 latUpdate = 0;
@@ -21,12 +21,13 @@ private:
 	
 
 public:
-	SimplePoint(Vector position, int size, double alpha, Color pointColor);
+	SimplePoint(Vector position, int size, double alpha, double maxSpeed, double maxAcceleration, Color pointColor);
 
 
 	void lerp(Vector initialPosition, Vector destinationPosition, double alpha);
 	void followSimple(SDL_Renderer* renderer, int clickPosX, int clickPosY);
-	void followRealistic(SDL_Renderer* renderer, int clickPosX, int clickPosY);
+	void update();
+	void followRealistic(SDL_Renderer* renderer, Point target);
 	void draw(SDL_Renderer* renderer);
 
 	Point& getPosition();

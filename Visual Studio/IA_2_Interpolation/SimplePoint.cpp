@@ -7,16 +7,17 @@ void SimplePoint::lerp(Vector initialPosition, Vector destinationPosition, doubl
 	}
 }
 
-SimplePoint::SimplePoint(Vector position, int size, double alpha, Color pointColor)
-	: position(position), pointColor(pointColor), vitesse(0, 0), acceleration(0, 0)
+SimplePoint::SimplePoint(Vector position, int size, double alpha, double maxSpeed, double maxAcceleration, Color pointColor)
+	: position(position), pointColor(pointColor), speed(0, 0), acceleration(0, 0)
 {
-	//this->position = position;
 	this->size = size;
 	this->alpha = alpha;
 
+	this->maxSpeed = maxSpeed;
+	this->maxAcceleration = maxAcceleration;
 
-	this->maxSpeed = 6;
-	this->targetSpeed = 8;
+	//this->maxSpeed = 300;
+	//this->maxAcceleration = 175;
 }
 
 
@@ -26,35 +27,26 @@ void SimplePoint::followSimple(SDL_Renderer* renderer, int clickPosX, int clickP
 	this->lerp(position, destination, alpha);
 }
 
-void SimplePoint::followRealistic(SDL_Renderer* renderer, int clickPosX, int clickPosY)
+void SimplePoint::update()
 {
 	currentTime = SDL_GetTicks();
-
 	if (currentTime - latUpdate > deltaTime) {
-
-		if (vitesse.magnitude() > 100) {
-			vitesse = { 0,0 };
-		}
-
-		
-		Vector destinationPosition(clickPosX, clickPosY);
-		if (alpha >= 0 && alpha <= 1) {
-			position = (1 - alpha) * position + alpha * destinationPosition;
-			position += vitesse;
-			vitesse += acceleration;
-		}
-		Vector currentVitesse = vitesse;
-
-
-		acceleration = { position.x - currentVitesse.x , position.y - currentVitesse.y };
-
-		/*if (acceleration.magnitude() > 500)
-			acceleration = { position.x - currentVitesse.x , position.y - currentVitesse.y };*/
-
+		position += speed * (double) (currentTime -latUpdate) / 1000;
+		speed += acceleration * (double) (currentTime - latUpdate) / 1000;
 		latUpdate = currentTime;
 	}
+}
 
-
+void SimplePoint::followRealistic(SDL_Renderer* renderer, Point target)
+{
+	//Step 1: get the direction
+	Vector AB(position, target);
+	//Step 2: limit this direction because it's too big
+	Vector targetSpeed = AB / AB.magnitude() * maxSpeed; // =======> vecteur v * L / norme(v)  where L is the new magnitude
+	//Step 3: desiredAcceleration = targetSpeed - currentSpeed 
+	Vector desiredAcceleration = targetSpeed - speed;
+	//Step 4: limit it because it's too big
+	this->acceleration = desiredAcceleration / desiredAcceleration.magnitude() * maxAcceleration;
 }
 
 
@@ -62,6 +54,9 @@ void SimplePoint::draw(SDL_Renderer* renderer)
 {
 	SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
 	position.draw(renderer, pointColor, size);
+
+	SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
+	SDL_RenderDrawLine(renderer, position.x, position.y, position.x + speed.x / 3, position.y + speed.y / 3);
 }
 
 Point& SimplePoint::getPosition()
