@@ -1,9 +1,14 @@
 #include "BehaviorManager.h"
 
-BehaviorManager::BehaviorManager()
-	
+std::vector <Boid*> BehaviorManager::boids;
+
+BehaviorManager::BehaviorManager()	
 {
-	//this->boids = boids;
+}
+
+void BehaviorManager::addBoids(std::vector<Boid*> boids)
+{
+	this->boids = boids;
 }
 
 void BehaviorManager::aware()

@@ -8,7 +8,7 @@ using namespace std;
 //	****************  //
 //	- position and size on screen
 constexpr auto POS_X = 200, POS_Y = 100;
-constexpr auto WIDTH = 400, HEIGHT = 400;
+constexpr auto WINDOW_WIDTH = 400, WINDOW_HEIGHT = 400;
 
 //	include desired header files for libraries
 #include "../lib_Point/Point.h"
@@ -27,7 +27,7 @@ SDL_Renderer* init_SDL(const char* title) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	window = SDL_CreateWindow(title, POS_X, POS_Y, WIDTH, HEIGHT, 0);
+	window = SDL_CreateWindow(title, POS_X, POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	return SDL_CreateRenderer(window, 0, 0);
 #pragma endregion
 }
@@ -66,7 +66,7 @@ int main(int argc, char** argv) {
 	SDL_Renderer* renderer = init_SDL("SLD template");	//	this object will draw in our window
 
 	/*	prepare useful objects here	*/
-	Point p(WIDTH / 2, HEIGHT / 2, true);
+	Point p(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, true);
 
 	//	*********  //
 	//	main loop  //

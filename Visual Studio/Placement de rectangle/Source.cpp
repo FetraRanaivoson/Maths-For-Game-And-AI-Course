@@ -4,8 +4,8 @@ using namespace std;
 #include <SDL.h>
 
 //	size of window on screen
-constexpr auto WIDTH = 600;
-constexpr auto HEIGHT = 600;
+constexpr auto WINDOW_WIDTH = 600;
+constexpr auto WINDOW_HEIGHT = 600;
 
 //	hauteur de la zone des sliders en bas de la fenetre
 constexpr auto HAUTEUR_SLIDERS = 100;
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	fenetre = SDL_CreateWindow("SDL template", 1920 + 200, 100, WIDTH, HEIGHT, 0);
+	fenetre = SDL_CreateWindow("SDL template", 1920 + 200, 100, WIDTH, WINDOW_HEIGHT, 0);
 	renderer = SDL_CreateRenderer(fenetre, 0, 0);
 #pragma endregion
 
@@ -78,7 +78,7 @@ int main(int argc, char** argv) {
 		//	i/2	 0  0  1  1  2  2
 		//	i%2  0  1  0  1  0  1
 		int x = 20 + (i / 2) * (100 + 30);
-		int y = HEIGHT - HAUTEUR_SLIDERS + 50 + (i % 2) * 30;
+		int y = WINDOW_HEIGHT - HAUTEUR_SLIDERS + 50 + (i % 2) * 30;
 		sliders[i] = new Slider(x, y, 100, 0, 100, 30);
 	}
 

@@ -9,7 +9,7 @@ using namespace std;
 //	****************  //
 //	- position and size on screen
 constexpr auto POS_X = 500, POS_Y = 300;
-constexpr auto WIDTH = 800, HEIGHT = 600;
+constexpr auto WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 
 enum {CIRCLE_RADIUS, CIRCLE_RESOLUTION };
 
@@ -33,7 +33,7 @@ SDL_Renderer* init_SDL(const char* title) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	window = SDL_CreateWindow(title, POS_X, POS_Y, WIDTH, HEIGHT, 0);
+	window = SDL_CreateWindow(title, POS_X, POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	return SDL_CreateRenderer(window, 0, 0);
 #pragma endregion
 }

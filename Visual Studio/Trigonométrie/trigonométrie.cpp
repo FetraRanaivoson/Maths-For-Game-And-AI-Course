@@ -7,8 +7,8 @@ using namespace std;
 #include "trigonométrie.h"
 
 
-constexpr auto WIDTH = 600;
-constexpr auto HEIGHT = 600;
+constexpr auto WINDOW_WIDTH = 600;
+constexpr auto WINDOW_HEIGHT = 600;
 
 SDL_Renderer* init_SDL(const char* title) {
 #pragma region SDL initialization
@@ -24,7 +24,7 @@ SDL_Renderer* init_SDL(const char* title) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	window = SDL_CreateWindow(title, 200, 200, WIDTH, HEIGHT, 0);
+	window = SDL_CreateWindow(title, 200, 200, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	return SDL_CreateRenderer(window, 0, 0);
 #pragma endregion
 }

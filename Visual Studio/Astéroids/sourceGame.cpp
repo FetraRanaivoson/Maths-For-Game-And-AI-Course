@@ -10,7 +10,7 @@ constexpr auto MAX_OBJECTS = 10;
 //	****************  //
 //	- position and size on screen
 constexpr auto POS_X = 500, POS_Y = 200;
-constexpr auto WIDTH = 600, HEIGHT = 700;
+constexpr auto WINDOW_WIDTH = 600, WINDOW_HEIGHT = 700;
 constexpr auto MAX_ASTEROIDS = 25;
 
 
@@ -35,7 +35,7 @@ SDL_Renderer* init_SDL(const char* title) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	window = SDL_CreateWindow(title, POS_X, POS_Y, WIDTH, HEIGHT, 0);
+	window = SDL_CreateWindow(title, POS_X, POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	return SDL_CreateRenderer(window, 0, 0);
 #pragma endregion
 }
@@ -71,11 +71,11 @@ void quit_SDL() {
 void CreateAndRandomizeAsteroids(Asteroid* asteroids[25])
 {
 	for (int i = 0; i < MAX_ASTEROIDS; i++) {
-		asteroids[i] = new Asteroid(Point(rand() % WIDTH + 1, rand() % HEIGHT / 10 + 1),	//Position
+		asteroids[i] = new Asteroid(Point(rand() % WINDOW_WIDTH + 1, rand() % WINDOW_HEIGHT / 10 + 1),	//Position
 			Vector(rand() % 50, rand() % 150),	//Speed
 			20,													//radius
 			200,												//mass
-			WIDTH, HEIGHT);
+			WINDOW_WIDTH, WINDOW_HEIGHT);
 	}
 }
 
@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
 
 	/*	prepare useful objects here	*/
 	srand((unsigned int)time(NULL));
-	VaisseauObject vaisseau(100, 0.0, 25, Point(WIDTH / 2, HEIGHT - 100, true), WIDTH, HEIGHT);
+	VaisseauObject vaisseau(100, 0.0, 25, Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT - 100, true), WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	Asteroid* asteroids[MAX_ASTEROIDS];
 	CreateAndRandomizeAsteroids(asteroids);

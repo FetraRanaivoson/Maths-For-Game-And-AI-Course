@@ -8,7 +8,7 @@ using namespace std;
 //	****************  //
 //	- position and size on screen
 constexpr auto POS_X = 500, POS_Y = 500;		
-constexpr auto WIDTH = 1600, HEIGHT = 600;
+constexpr auto WINDOW_WIDTH = 1600, WINDOW_HEIGHT = 600;
 
 
 
@@ -33,7 +33,7 @@ SDL_Renderer* init_SDL(const char* title) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	window = SDL_CreateWindow(title, POS_X, POS_Y, WIDTH, HEIGHT, 0);
+	window = SDL_CreateWindow(title, POS_X, POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	return SDL_CreateRenderer(window, 0, 0);
 #pragma endregion
 }
@@ -79,13 +79,13 @@ double getSliderMaxRange(int sliderIndex) {
 	if (sliderIndex == Y0 || sliderIndex == k)
 		maxRange = 10;
 	if (sliderIndex == x_MinS)
-		maxRange = WIDTH - 90.0;
+		maxRange = WINDOW_WIDTH - 90.0;
 	if (sliderIndex == x_MaxS)
-		maxRange = WIDTH - 90.0;
+		maxRange = WINDOW_WIDTH - 90.0;
 	if (sliderIndex == y_MinS)
-		maxRange = HEIGHT - 130.0;
+		maxRange = WINDOW_HEIGHT - 130.0;
 	if (sliderIndex == y_MaxS)
-		maxRange = HEIGHT - 130.0;
+		maxRange = WINDOW_HEIGHT - 130.0;
 	if (sliderIndex == POINT_NUMBER)
 		maxRange = 0.5;
 	return maxRange;
@@ -104,11 +104,11 @@ double getSliderMinRange(int sliderIndex) {
 	if (sliderIndex == Y0 || sliderIndex == k)
 		minRange = -10;
 	if (sliderIndex == x_MinS)
-		minRange = WIDTH - 1510.0;
+		minRange = WINDOW_WIDTH - 1510.0;
 	if (sliderIndex == x_MaxS)
 		minRange = x_MinS;
 	if (sliderIndex == y_MinS)
-		minRange = HEIGHT - 560.0;
+		minRange = WINDOW_HEIGHT - 560.0;
 	if (sliderIndex == y_MaxS)
 		minRange = y_MinS;
 	if (sliderIndex == POINT_NUMBER)
@@ -129,13 +129,13 @@ double getSliderInitialValue(int sliderIndex, double& xMinS, double& xMaxS, doub
 	if (sliderIndex == Y0 || sliderIndex == k)
 		initialValue = 1;
 	if (sliderIndex == x_MinS)
-		initialValue = WIDTH - 1500.0;
+		initialValue = WINDOW_WIDTH - 1500.0;
 	if (sliderIndex == x_MaxS)
-		initialValue = WIDTH - 100.0;
+		initialValue = WINDOW_WIDTH - 100.0;
 	if (sliderIndex == y_MinS)
-		initialValue = HEIGHT - 550.0;
+		initialValue = WINDOW_HEIGHT - 550.0;
 	if (sliderIndex == y_MaxS)
-		initialValue = HEIGHT - 140.0;
+		initialValue = WINDOW_HEIGHT - 140.0;
 	if (sliderIndex == POINT_NUMBER)
 		initialValue = 0.1;
 	return initialValue;
@@ -146,7 +146,7 @@ void placeSliders(Slider* sliders[], double& xMinS, double& xMaxS, double& yMinS
 {
 	for (int i = 0; i < 12; i++) {
 		int x = 30 + (i / 2) * (200 + 30);
-		int y = HEIGHT - 100 + (i % 2) * 30;
+		int y = WINDOW_HEIGHT - 100 + (i % 2) * 30;
 		double maxRange = getSliderMaxRange(i);
 		double minRange = getSliderMinRange(i);
 		double initialValue = getSliderInitialValue(i, xMinS, xMaxS, yMinS, yMaxS);
@@ -284,23 +284,23 @@ void ListenToScreenSquashAndStretch(double& xMinS, double& xMaxS, Slider* slider
 	if (xMinS <= xMaxS) {
 		xMinS = sliders[x_MinS]->getValue();		//Whatever we set for xMins,
 		sliders[x_MinS]->setMax(xMaxS);				//xMinS will always be INFERIOR TO xMaxS
-		sliders[x_MinS]->setMin(WIDTH - 1510.0);	//And all SUPERIOR TO Margin left
+		sliders[x_MinS]->setMin(WINDOW_WIDTH - 1510.0);	//And all SUPERIOR TO Margin left
 	}
 	if (xMaxS >= xMinS) {
 		xMaxS = sliders[x_MaxS]->getValue();		//Whatever we set for xMaxS,
 		sliders[x_MaxS]->setMin(xMinS);				//xMaxS will always be SUPERIOR TO xMinS
-		sliders[x_MaxS]->setMax(WIDTH - 90.0);		//And all INFERIOR TO Margin right
+		sliders[x_MaxS]->setMax(WINDOW_WIDTH - 90.0);		//And all INFERIOR TO Margin right
 	}
 	if (yMinS <= yMaxS) {
 		yMinS = sliders[y_MinS]->getValue();		//Whatever we set for yMinS,
 		sliders[y_MinS]->setMax(yMaxS);				// yMinS will always be INFERIOR TO yMaxS
-		sliders[y_MinS]->setMin(HEIGHT - 560.0);	//And all SUPERIOR TO Margin top
+		sliders[y_MinS]->setMin(WINDOW_HEIGHT - 560.0);	//And all SUPERIOR TO Margin top
 	}
 
-	if (yMaxS >= yMinS && yMaxS <= HEIGHT - 130.0) {
+	if (yMaxS >= yMinS && yMaxS <= WINDOW_HEIGHT - 130.0) {
 		yMaxS = sliders[y_MaxS]->getValue();		//Whatever we set for yMaxS,
 		sliders[y_MaxS]->setMin(yMinS);				//yMaxS will always be SUPERIOR TO yMinS
-		sliders[y_MaxS]->setMax(HEIGHT - 130.0);	//And all INFERIOR TO Margin bottom
+		sliders[y_MaxS]->setMax(WINDOW_HEIGHT - 130.0);	//And all INFERIOR TO Margin bottom
 	}
 }
 

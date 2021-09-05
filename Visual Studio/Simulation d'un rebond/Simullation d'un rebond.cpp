@@ -10,7 +10,7 @@ using namespace std;
 //	****************  //
 //	- position and size on screen
 constexpr auto POS_X = 500, POS_Y = 200;		
-constexpr auto WIDTH = 800, HEIGHT = 600;
+constexpr auto WINDOW_WIDTH = 800, WINDOW_HEIGHT = 600;
 
 //	include desired header files for libraries
 #include "../lib_Point/Point.h"
@@ -34,7 +34,7 @@ SDL_Renderer* init_SDL(const char* title) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	window = SDL_CreateWindow(title, POS_X, POS_Y, WIDTH, HEIGHT, 0);
+	window = SDL_CreateWindow(title, POS_X, POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	return SDL_CreateRenderer(window, 0, 0);
 #pragma endregion
 }
@@ -114,7 +114,7 @@ void placeSliders(Slider* sliders[])
 {
 	for (int i = 0; i < 4; i++) {
 		int x = 30 + (i / 2) * (200 + 30);
-		int y = HEIGHT - 100 + (i % 2) * 30;
+		int y = WINDOW_HEIGHT - 100 + (i % 2) * 30;
 		double maxRange = getSliderMaxRange(i);
 		double minRange = getSliderMinRange(i);
 		sliders[i] = new Slider(x, y, 200, minRange, maxRange, 0);

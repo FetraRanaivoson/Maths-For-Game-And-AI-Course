@@ -10,7 +10,7 @@ constexpr auto MAX_OBJECTS = 10;
 //	****************  //
 //	- position and size on screen
 constexpr auto POS_X = 500, POS_Y = 200;
-constexpr auto WIDTH = 600, HEIGHT = 400;
+constexpr auto WINDOW_WIDTH = 600, WINDOW_HEIGHT = 400;
 
 enum {SPEED_X, SPEED_Y, ACCELERATION_X, ACCELERATION_Y};
 
@@ -23,7 +23,7 @@ void placeSliders(Slider* sliders[])
 {
 	for (int i = 0; i < 4; i++) {
 		int x = 30 + (i / 2) * (200 + 30);
-		int y = HEIGHT - 100 + (i % 2) * 30;
+		int y = WINDOW_HEIGHT - 100 + (i % 2) * 30;
 		sliders[i] = new Slider(x, y, 200, -10000, 10000, 0);
 	}
 }
@@ -49,7 +49,7 @@ SDL_Renderer* init_SDL(const char* title) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	window = SDL_CreateWindow(title, POS_X, POS_Y, WIDTH, HEIGHT, 0);
+	window = SDL_CreateWindow(title, POS_X, POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	return SDL_CreateRenderer(window, 0, 0);
 #pragma endregion
 }
@@ -92,9 +92,9 @@ int main(int argc, char** argv) {
 
 	Perceptron* tabObjects[MAX_OBJECTS];
 	for (int i = 0; i < MAX_OBJECTS; i++) {
-		Point position(rand() % WIDTH, rand() % HEIGHT);
+		Point position(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT);
 		Vector speed(15 - rand() % 30, 15 - rand() % 30);
-		tabObjects[i] = new Perceptron(5, position, speed, WIDTH, HEIGHT);
+		tabObjects[i] = new Perceptron(5, position, speed, WINDOW_WIDTH, WINDOW_HEIGHT);
 	}
 
 	long time = clock();

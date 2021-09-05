@@ -4,8 +4,8 @@ using namespace std;
 #include <SDL.h>
 
 //	size of window on screen
-constexpr auto WIDTH = 600;
-constexpr auto HEIGHT = 600;
+constexpr auto WINDOW_WIDTH = 600;
+constexpr auto WINDOW_HEIGHT = 600;
 
 //	include desired header files for libraries
 #include "../lib_Slider/Slider.h"
@@ -17,12 +17,12 @@ constexpr auto HEIGHT = 600;
 void placePointCloud(Point points [], Point& myPoint) { //Placer les points hors de la boucle avant de faire points[i].draw(...) dans la boucle
 	srand((unsigned int)time(NULL));
 	for (int i = 0; i < MAX_POINTS; i++) {
-		points[i].x = rand() % WIDTH;
-		points[i].y = rand() % HEIGHT;
+		points[i].x = rand() % WINDOW_WIDTH;
+		points[i].y = rand() % WINDOW_HEIGHT;
 		// points [i] = Point (rand() % WIDTH, rand () % HEIGHT)
 	}
-	myPoint.x = rand() % WIDTH;
-	myPoint.y = rand() % HEIGHT;
+	myPoint.x = rand() % WINDOW_WIDTH;
+	myPoint.y = rand() % WINDOW_HEIGHT;
 }
 
 void drawPointCloud(SDL_Renderer* renderer, Point points[]) {
@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	fenetre = SDL_CreateWindow("SDL template", 200, 100, WIDTH, HEIGHT, 0);
+	fenetre = SDL_CreateWindow("SDL template", 200, 100, WIDTH, WINDOW_HEIGHT, 0);
 	renderer = SDL_CreateRenderer(fenetre, 0, 0);
 #pragma endregion
 	//Le nuage de points

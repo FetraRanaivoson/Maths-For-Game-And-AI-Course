@@ -8,13 +8,14 @@
 #include <time.h>
 #include "../lib_Point/Point.h"
 #include "Boid.h"
-//#include "BehaviorManager.h"
+#include "BehaviorManager.h"
 #include "Object.h"
+#include "../lib_Slider/Slider.h"
 using namespace std;
 constexpr auto POS_X = 200, POS_Y = 75;
 constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 700;
-constexpr auto MAX_BOIDS = 50;
-constexpr auto MAX_ENVIR_OBJECTS = 30;
+constexpr auto MAX_BOIDS = 30;
+constexpr auto MAX_ENVIR_OBJECTS = 80;
 
 
 void createBoids(std::vector<Boid*>& boids, int pointSize, double alpha);
@@ -78,10 +79,19 @@ int main(int argc, char** argv) {
 	double alpha = .005;
 	std::vector<Boid*> boids;
 	createBoids(boids, pointSize, alpha);
+
 	std::vector <Object*> props;
 	createEnvironment(props);
 
 	Object* movingTarget = new Object(Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 15, Color(255, 0, 0, SDL_ALPHA_OPAQUE), WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	BehaviorManager* bm = new BehaviorManager();
+	bm->addBoids(boids);
+
+	Slider* separationSlider = new Slider(10, 10, 400, 0, 1, .75);
+	Slider* alignmentSlider = new Slider(430, 10, 400, 0, 1, 0);
+	Slider* cohesionSlider = new Slider(840, 10, 400, 0, 1, 0);
+	Slider* targetSlider = new Slider(10, WINDOW_HEIGHT-10, 400, 0, 1, 0);
 
 	int clickPosX, clickPosY;
 	Uint32 buttons;
@@ -94,22 +104,20 @@ int main(int argc, char** argv) {
 		SDL_PumpEvents();
 		buttons = SDL_GetMouseState(&clickPosX, &clickPosY);
 
-		//repressionArea->draw(renderer);
 		movingTarget->drawRandom(renderer);
+		separationSlider->draw(renderer, event);
+		cohesionSlider->draw(renderer, event);
+		alignmentSlider->draw(renderer, event);
+		targetSlider->draw(renderer, event);
 
-		//Be Aware of all boids' positions to calculate the sumOfPositions
-		for (Boid* boid : boids) {
-			Boid::sumOfPositions.operator+=(boid->getPosition());
-		}
-		//Be Aware of all boids' speeds to calculate the sumOfSpeeds
-		for (Boid* boid : boids) {
-			Boid::sumOfSpeeds.operator+=(boid->getSpeed());
-		}
 
 		for (Boid* boid : boids) {
+			boid->setSeparationWeight(separationSlider->getValue());
+			boid->setAlignmentWeight(alignmentSlider->getValue());
+			boid->setCohesionWeight(cohesionSlider->getValue());
+			boid->setTargetWeight(targetSlider->getValue());
 			boid->update();
-			//boid->followRealistic(renderer, Point(clickPosX, clickPosY),repressionArea);
-			boid->followRealistic(renderer, movingTarget->getPosition(), movingTarget, props);
+			boid->follow(renderer, movingTarget->getPosition(), movingTarget, props);
 			boid->draw(renderer);
 		}
 
@@ -128,19 +136,17 @@ int main(int argc, char** argv) {
 void createBoids(std::vector<Boid*>& boids, int pointSize, double alpha)
 {
 	for (int i = 0; i < MAX_BOIDS; i++) {
-		double maxSpeed = rand() % 300 + 50.0;
-		double maxAcceleration = rand() % 350 + 220.0;
-		/*double maxSpeed = 275;
-		double maxAcceleration = 200;*/
+		double maxSpeed = 100.0;
+		double maxAcceleration = 700;
 		Color pointColor(200, 200, 50, SDL_ALPHA_OPAQUE);
-		boids.push_back(new Boid(Vector(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT), pointSize, alpha, maxSpeed, maxAcceleration, pointColor));
-		//boids.push_back(new Boid(Vector(10, HEIGHT / 2), pointSize, alpha, maxSpeed, maxAcceleration, pointColor));
+		boids.push_back(new Boid(Vector(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT), 
+			pointSize, alpha, maxSpeed, maxAcceleration, pointColor));
 	}
 }
 
 void createEnvironment(std::vector<Object*>& staticArea)
 {
 	for (int i = 0; i < MAX_ENVIR_OBJECTS; i++) {
-		staticArea.push_back(new Object(Point(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT), rand()% 10 + 5.0, Color(0, 255, 10, 1), WINDOW_WIDTH, WINDOW_HEIGHT));
+		staticArea.push_back(new Object(Point(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT), rand() % 10 + 5.0, Color(20, 10, 10, SDL_ALPHA_OPAQUE), WINDOW_WIDTH, WINDOW_HEIGHT));
 	}
 }

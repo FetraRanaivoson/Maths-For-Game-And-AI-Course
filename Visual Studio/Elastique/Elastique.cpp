@@ -10,7 +10,7 @@ constexpr auto MAX_OBJECTS = 10;
 //	****************  //
 //	- position and size on screen
 constexpr auto POS_X = 500, POS_Y = 200;
-constexpr auto WIDTH = 600, HEIGHT = 900;
+constexpr auto WINDOW_WIDTH = 600, WINDOW_HEIGHT = 900;
 
 
 
@@ -33,7 +33,7 @@ SDL_Renderer* init_SDL(const char* title) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	window = SDL_CreateWindow(title, POS_X, POS_Y, WIDTH, HEIGHT, 0);
+	window = SDL_CreateWindow(title, POS_X, POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	return SDL_CreateRenderer(window, 0, 0);
 #pragma endregion
 }
@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
 	SDL_Renderer* renderer = init_SDL("SLD template");	//	this object will draw in our window
 
 	/*	prepare useful objects here	*/
-	Perceptron objects(3, Point(WIDTH/4, HEIGHT/4, true), Point(WIDTH/2, HEIGHT/2, true), Vector(0, 0), Vector(0,0), WIDTH, HEIGHT);
+	Perceptron objects(3, Point(WINDOW_WIDTH/4, WINDOW_HEIGHT/4, true), Point(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, true), Vector(0, 0), Vector(0,0), WINDOW_WIDTH, WINDOW_HEIGHT);
 	double initialDistanceInX = objects.getABDistanceInX();
 	double initialDistanceInY = objects.getABDistanceInY();
 
