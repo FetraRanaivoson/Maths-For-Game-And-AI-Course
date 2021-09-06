@@ -191,6 +191,9 @@ Vector Boid::getCohesionAcceleration(SDL_Renderer* renderer, Object* area, std::
 				this->sumOfPositions.operator+=(boid->getPosition());
 			}
 		}
+		else {
+			this->direction = this->direction;
+		}
 		if (neighbourBoids.size() > 0) {
 			Vector cohesionVector = { (this->sumOfPositions.x),(this->sumOfPositions.y) };
 			this->direction = Vector(this->boidPosition, cohesionVector);

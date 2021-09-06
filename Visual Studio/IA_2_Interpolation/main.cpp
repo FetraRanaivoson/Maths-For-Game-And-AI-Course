@@ -14,8 +14,8 @@
 using namespace std;
 constexpr auto POS_X = 200, POS_Y = 75;
 constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 700;
-constexpr auto MAX_BOIDS = 30;
-constexpr auto MAX_ENVIR_OBJECTS = 80;
+constexpr auto MAX_BOIDS = 60;
+constexpr auto MAX_ENVIR_OBJECTS = 20;
 
 
 void createBoids(std::vector<Boid*>& boids, int pointSize, double alpha);
