@@ -24,6 +24,11 @@ void Object::drawRandom(SDL_Renderer* renderer)
 	}
 	else {
 		position.drawCircle(renderer, radius, color, true);
+		position.drawCircle(renderer, radius - 2, color, true);
+		position.drawCircle(renderer, radius - 4, color, true);
+		position.drawCircle(renderer, radius - 6, color, true);
+		position.drawCircle(renderer, radius - 8, color, true);
+		position.drawCircle(renderer, radius - 9, color, true);
 	}
 	
 }

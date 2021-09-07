@@ -59,19 +59,18 @@ void Boid::setAlignmentWeight(double newAlignmentWeight)
 	this->alignmentWeight = newAlignmentWeight;
 }
 
-Point Boid::getRepulsionVector()
-{
-	std::vector<Boid*>neighbourBoids = this->getBoidsInRange(this->repulsionRadiusRange);
-	if (neighbourBoids.size() > 0) {
-		for (Boid* boid : neighbourBoids) {
-
-			this->sumOfVectorDistance.operator+=(Vector(this->boidPosition, boid->getPosition()));
-		}
-		Vector repulsionVector = { (this->sumOfVectorDistance.x),(this->sumOfVectorDistance.y) };
-		return repulsionVector;
-	}
-	return Vector(0, 0);
-}
+//Vector Boid::getRepulsionVector()
+//{
+//	std::vector<Boid*>neighbourBoids = this->getBoidsInRange(this->repulsionRadiusRange);
+//	if (neighbourBoids.size() > 0) {
+//		for (Boid* boid : neighbourBoids) {
+//			this->sumOfVectorDistance.operator+=(Vector(this->boidPosition, boid->getPosition()));
+//		}
+//		Vector repulsionVector = { (this->sumOfVectorDistance.x),(this->sumOfVectorDistance.y) };
+//		return repulsionVector / neighbourBoids.size();
+//	}
+//	return Vector(0, 0);
+//}
 
 void Boid::setSeparationWeight(double newSeparationWeight)
 {
@@ -87,9 +86,9 @@ void Boid::lerp(Vector initialPosition, Vector destinationPosition, double alpha
 }
 
 Boid::Boid(Vector position, int size, double alpha, double maxSpeed, double maxAcceleration, Color pointColor)
-	: boidPosition(position), pointColor(pointColor), speed(0, 0), acceleration(0, 0), direction(0, 0),
-	targetAcceleration(0, 0), cohesionAcceleration(0, 0), alignmentAcceleration(0, 0), separationAcceleration(0, 0),
-	targetSpeed(0, 0), /*ohesionSpeed(0, 0), alignmentSpeed(0, 0), separationSpeed(0, 0), */
+	: boidPosition(position), pointColor(pointColor), speed(0, 0), acceleration(0, 0), /*direction(0, 0),*/
+	/*targetAcceleration(0, 0),*/ cohesionAcceleration(0, 0), alignmentAcceleration(0, 0), separationAcceleration(0, 0),
+	targetSpeed(0, 0), /*cohesionSpeed(0, 0), alignmentSpeed(0, 0), separationSpeed(0, 0), */
 	sumOfSpeeds(0, 0), sumOfVectorDistance(0, 0) /*repulsionVector(0,0)*/
 {
 	this->size = size;
@@ -129,20 +128,19 @@ void Boid::update()
 		this->speed = this->speed / this->speed.magnitude() * maxSpeed;
 	}
 
-
 	latUpdate = currentTime;
 
 	if (this->boidPosition.x > 1200) {
-		this->boidPosition.x = 0;
+		this->boidPosition.x -= 1200;
 	}
 	if (this->boidPosition.y > 700) {
-		this->boidPosition.y = 0;
+		this->boidPosition.y -= 700;
 	}
 	if (this->boidPosition.x < 0) {
-		this->boidPosition.x = 1200;
+		this->boidPosition.x += 1200;
 	}
 	if (this->boidPosition.y < 0) {
-		this->boidPosition.y = 700;
+		this->boidPosition.y += 700;
 	}
 	//}
 }
@@ -151,153 +149,169 @@ void Boid::update()
 Vector Boid::getTargetAcceleration(SDL_Renderer* renderer, Point target, Object* area, std::vector <Object*> props)
 {
 	//Step 1: get the direction
-	if (this->isAround(area)) {
+	Vector direction = { 0,0 };
+	/*if (this->isAround(area)) {
 		this->direction = { this->boidPosition, area->getPosition() };
 		this->direction = -this->direction / 1;
-	}
-	else {
-		this->direction = Vector(this->boidPosition, target);
-	}
+	}*/
+	//else {
+	direction = { this->boidPosition, target };
+	//}
 
 	//Step 1.5: Just in case in front of props
-	this->avoidObstacle(props);
+	//this->avoidObstacle(props);
 
 	//Step 2: limit this direction because it's too big
-	if (this->direction.magnitude() != 0) {
-		this->targetSpeed = this->direction / this->direction.magnitude() * maxSpeed; // =======> vecteur v * L / norme(v)  where L is the new magnitude
+	if (direction.magnitude() != 0) {
+		this->targetSpeed = direction / direction.magnitude() * maxSpeed; // =======> vecteur v * L / norme(v)  where L is the new magnitude
 	}
 
 	//Step 3: desiredAcceleration = targetSpeed - currentSpeed 
 	Vector desiredAcceleration = targetSpeed - this->speed;
 
 	//Step 4: limit it because it's too big
+	Vector targetAcceleration = { 0,0 };
 	if (desiredAcceleration.magnitude() != 0) {
-		this->targetAcceleration = desiredAcceleration / desiredAcceleration.magnitude() * this->maxAcceleration;
+		targetAcceleration = desiredAcceleration / desiredAcceleration.magnitude() * this->maxAcceleration;
 	}
-	return this->targetAcceleration;
+	return targetAcceleration;
 
 }
 Vector Boid::getCohesionAcceleration(SDL_Renderer* renderer, Object* area, std::vector<Object*> props)
 {
 	//Step 1: get the direction
-	if (this->isAround(area)) {
+	/*if (this->isAround(area)) {
 		this->direction = { this->boidPosition, area->getPosition() };
 		this->direction = -direction / 1;
-	}
-	else {
-		std::vector<Boid*>neighbourBoids = this->getBoidsInRange(this->attractionRadiusRange);
-		if (neighbourBoids.size() > 0) {
-			for (Boid* boid : neighbourBoids) {
-				this->sumOfPositions.operator+=(boid->getPosition());
-			}
+	}*/
+	//else {
+	std::vector<Boid*>neighbourBoids = this->getBoidsInRange(this->attractionRadiusRange);
+	Vector direction = { 0,0 };
+	if (neighbourBoids.size() > 0) {
+		for (Boid* boid : neighbourBoids) {
+			this->sumOfPositions += (boid->getPosition());
 		}
-		else {
-			this->direction = this->direction;
+		Vector cohesionVector = { (this->sumOfPositions.x),(this->sumOfPositions.y) };
+		direction = cohesionVector / neighbourBoids.size();
+
+
+		//if (neighbourBoids.size() > 0) {
+		//	Vector cohesionVector = { (this->sumOfPositions.x),(this->sumOfPositions.y) };
+		//	this->direction = Vector(this->boidPosition, cohesionVector);
+		//	this->direction = this->direction / neighbourBoids.size();
+		//}
+		//}
+		//Step 1.5: Just in case in front of props
+		//this->avoidObstacle(props);
+
+		//Step 2: 
+		//if (this->direction.magnitude() != 0) {
+		Vector cohesionSpeed = direction;
+		if (direction.magnitude() != 0) {
+			cohesionSpeed *= this->maxSpeed * direction.magnitude(); // =======> vecteur v * L / norme(v)  where L is the new magnitude
 		}
-		if (neighbourBoids.size() > 0) {
-			Vector cohesionVector = { (this->sumOfPositions.x),(this->sumOfPositions.y) };
-			this->direction = Vector(this->boidPosition, cohesionVector);
-			this->direction = this->direction / neighbourBoids.size();
+
+		//}
+			//Step 3: 
+		Vector desiredAcceleration = cohesionSpeed - this->speed;
+
+		//Step 4: limit it because it's too big
+		//Vector cohesionAcceleration = { 0,0 };
+		if (desiredAcceleration.magnitude() != 0) {
+			cohesionAcceleration = desiredAcceleration / desiredAcceleration.magnitude() * this->maxAcceleration;
 		}
 	}
-	//Step 1.5: Just in case in front of props
-	this->avoidObstacle(props);
-
-	//Step 2: 
-	//if (this->direction.magnitude() != 0) {
-	Vector cohesionSpeed = this->direction / this->direction.magnitude() * this->maxSpeed; // =======> vecteur v * L / norme(v)  where L is the new magnitude
-
-//}
-	//Step 3: 
-	Vector desiredAcceleration = cohesionSpeed - this->speed;
-
-	//Step 4: limit it because it's too big
-	if (desiredAcceleration.magnitude() != 0) {
-		this->cohesionAcceleration = desiredAcceleration / desiredAcceleration.magnitude() * this->maxAcceleration;
-	}
-	return this->cohesionAcceleration;
+	return cohesionAcceleration;
 }
 Vector Boid::getAlignmentAcceleration(SDL_Renderer* renderer, Object* area, std::vector<Object*> props)
 {
 	//Step 1
-	if (this->isAround(area)) {
-		this->direction = { this->boidPosition, area->getPosition() };
-		this->direction = -this->direction / 1;
-	}
-	else {
-		this->direction = Vector(this->boidPosition, this->getAlignementVector());
-	}
-	//Step 1.5: Just in case in front of props
-	this->avoidObstacle(props);
-
-	//Step 2: 
-	//if (this->direction.magnitude() != 0) {
-	Vector alignmentSpeed = this->direction / this->direction.magnitude() * this->maxSpeed;
+	//if (this->isAround(area)) {
+	//	this->direction = { this->boidPosition, area->getPosition() };
+	//	this->direction = -this->direction / 1;
 	//}
+	//else {
+	Vector direction = { 0,0 };
+	std::vector<Boid*>neighbourBoids = this->getBoidsInRange(this->alignmentRadiusRange);
+	if (neighbourBoids.size() > 0) {
+		for (Boid* boid : neighbourBoids) {
+			this->sumOfSpeeds += boid->getSpeed();
+		}
+		direction = this->sumOfSpeeds / neighbourBoids.size();
 
-	//Step 3:
-	Vector desiredAcceleration = alignmentSpeed - this->speed;
+		//}
+		//Step 1.5: Just in case in front of props
+		//this->avoidObstacle(direction, props);
 
-	//Step 4: 
-	if (desiredAcceleration.magnitude() != 0) {
-		this->targetAcceleration = desiredAcceleration / desiredAcceleration.magnitude() * this->maxAcceleration;
+		//Step 2: 
+		Vector alignmentSpeed = direction;
+		if (direction.magnitude() != 0) {
+			alignmentSpeed *= this->maxSpeed / direction.magnitude();
+		}
+
+		//Step 3:
+		Vector desiredAcceleration = alignmentSpeed - this->speed;
+
+		//Step 4: 
+		//Vector alignmentAcceleration = { 0,0 };
+		if (desiredAcceleration.magnitude() != 0) {
+			alignmentAcceleration = desiredAcceleration / desiredAcceleration.magnitude() * this->maxAcceleration;
+		}
 	}
-
-	return this->targetAcceleration;
-
-
+	return alignmentAcceleration;
 }
 Vector Boid::getSeparationAcceleration(SDL_Renderer* renderer, Object* movingObject, std::vector<Object*> props)
 {
 	//Step 1: get the direction
-	if (this->isAround(movingObject)) {
-		this->direction = { this->boidPosition, movingObject->getPosition() };
-		this->direction = -this->direction / 1;
-	}
-	else {
-		std::vector<Boid*>neighbourBoids = this->getBoidsInRange(this->repulsionRadiusRange);
+	//if (this->isAround(movingObject)) {
+	//	this->direction = { this->boidPosition, movingObject->getPosition() };
+	//	this->direction = -this->direction / 1;
+	//}
+	//else {
+	std::vector<Boid*>neighbourBoids = this->getBoidsInRange(this->repulsionRadiusRange);
+	Vector direction = { 0,0 };
+	Vector sumOfVectorDistance = { 0,0 };
+
+	if (neighbourBoids.size() > 0) {
 		for (Boid* boid : neighbourBoids) {
-			if (neighbourBoids.size() > 0) {
-				this->sumOfVectorDistance.operator+=(Vector(this->boidPosition, boid->getPosition()));
-			}
+			sumOfVectorDistance += Vector(this->boidPosition, boid->getPosition());
+		}
+		direction = sumOfVectorDistance;
+		direction = -direction / neighbourBoids.size();
+
+
+		//Step 1.5: Just in case in front of props
+		//this->avoidObstacle(direction, props);
+
+		//Step 2: limit this direction because it's too big
+		Vector separationSpeed = direction;
+		if (direction.magnitude() != 0) {
+			separationSpeed *= this->maxSpeed / direction.magnitude();  // =======> vecteur v * L / norme(v)  where L is the new magnitude
 		}
 
-		if (neighbourBoids.size() > 0) {
-			Vector repulsionVector = { (this->sumOfVectorDistance.x),(this->sumOfVectorDistance.y) };
-			this->direction = repulsionVector;
-			this->direction = -direction / neighbourBoids.size();
+		//Step 3: desiredAcceleration = targetSpeed - currentSpeed 
+		Vector desiredAcceleration = separationSpeed - this->speed;
+
+		//Step 4: limit it because it's too big
+		if (desiredAcceleration.magnitude() != 0) {
+			separationAcceleration = desiredAcceleration / desiredAcceleration.magnitude() * this->maxAcceleration;
 		}
-
 	}
-
-	//Step 1.5: Just in case in front of props
-	this->avoidObstacle(props);
-
-	//Step 2: limit this direction because it's too big
-	Vector separationSpeed = this->direction / this->direction.magnitude() * this->maxSpeed; // =======> vecteur v * L / norme(v)  where L is the new magnitude
-
-	//Step 3: desiredAcceleration = targetSpeed - currentSpeed 
-	Vector desiredAcceleration = separationSpeed - this->speed;
-
-	//Step 4: limit it because it's too big
-	if (desiredAcceleration.magnitude() != 0) {
-		this->separationAcceleration = desiredAcceleration / desiredAcceleration.magnitude() * this->maxAcceleration;
-	}
-	return this->separationAcceleration;
+	//}
+	return separationAcceleration;
 }
 
 
 void Boid::follow(SDL_Renderer* renderer, Point target, Object* area, std::vector<Object*> props)
 {
 
-	double sumWeights = this->targetWeight + this->cohesionWeight + this->alignmentWeight + this->separationWeight;
-	sumWeights = 1;
-	this->acceleration = (this->targetWeight / sumWeights) * this->getTargetAcceleration(renderer, target, area, props)
-		+ (this->cohesionWeight / sumWeights) * this->getCohesionAcceleration(renderer, area, props)
-		+ (this->alignmentWeight / sumWeights) * this->getAlignmentAcceleration(renderer, area, props)
-		+ (this->separationWeight / sumWeights) * this->getSeparationAcceleration(renderer, area, props);
+	this->acceleration = this->targetWeight * this->getTargetAcceleration(renderer, target, area, props) +
+		this->cohesionWeight * this->getCohesionAcceleration(renderer, area, props) +
+		this->alignmentWeight * this->getAlignmentAcceleration(renderer, area, props) +
+		this->separationWeight * this->getSeparationAcceleration(renderer, area, props);
 
-	this->acceleration = this->acceleration / this->acceleration.magnitude() * maxAcceleration;
+	if (this->acceleration.magnitude() != 0)
+		this->acceleration = this->acceleration / this->acceleration.magnitude() * maxAcceleration;
 }
 
 
@@ -305,16 +319,16 @@ void Boid::draw(SDL_Renderer* renderer)
 {
 	SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
 	boidPosition.draw(renderer, pointColor, size);
-	//boidPosition.drawCircle(renderer, attractionRadiusRange, Color(120, 100, 203, 255), true);
-	//boidPosition.drawCircle(renderer, alignmentRadiusRange, Color(10, 120, 10, SDL_ALPHA_OPAQUE), true);
-	boidPosition.drawCircle(renderer, repulsionRadiusRange, Color(2, 20, 42, SDL_ALPHA_OPAQUE), true);
+	boidPosition.drawCircle(renderer, attractionRadiusRange, Color(120, 100, 203, 255), true);
+	boidPosition.drawCircle(renderer, alignmentRadiusRange, Color(10, 120, 10, SDL_ALPHA_OPAQUE), true);
+	boidPosition.drawCircle(renderer, repulsionRadiusRange, Color(255, 0, 0, SDL_ALPHA_OPAQUE), true);
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 0, SDL_ALPHA_OPAQUE);
 	SDL_RenderDrawLine(renderer, boidPosition.x, boidPosition.y, boidPosition.x + speed.x / 5, boidPosition.y + speed.y / 5);
 
 
 }
-void Boid::avoidObstacle(std::vector <Object*> props)
+void Boid::avoidObstacle(Vector direction, std::vector <Object*> props)
 {
 	for (Object* prop : props) {
 		if (this->isAround(prop)) {
@@ -327,10 +341,10 @@ Vector& Boid::getPosition()
 {
 	return boidPosition;
 }
-Vector& Boid::getDirection()
-{
-	return direction;
-}
+//Vector& Boid::getDirection()
+//{
+//	return direction;
+//}
 Vector& Boid::getSpeed()
 {
 	return speed;

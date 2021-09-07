@@ -21,19 +21,19 @@ private:
 	Uint32 latUpdate = 0;
 	int deltaTime = 20;
 
-	Vector direction;
+	//Vector direction;
 
 	Vector targetSpeed;
-	Vector targetAcceleration;
+	//Vector targetAcceleration;
 	Vector cohesionAcceleration;
 	Vector alignmentAcceleration;
 	Vector separationAcceleration;
 
 
 	std::vector <Boid*> getBoidsInRange(double cohesionRadius);
-	double attractionRadiusRange = 90;
-	double alignmentRadiusRange = 80;
-	double repulsionRadiusRange = 130;
+	double attractionRadiusRange =70;
+	double alignmentRadiusRange = 50;
+	double repulsionRadiusRange = 30;
 	//Vector repulsionVector;
 
 	double targetWeight = 0.0;
@@ -59,7 +59,7 @@ public:
 
 	//REPULSION (SEPARATION)
 	Vector sumOfVectorDistance;
-	Point getRepulsionVector();
+	//Vector getRepulsionVector();
 	void setSeparationWeight(double newSeparationWeight);
 
 
@@ -78,12 +78,12 @@ public:
 	void update();
 	void draw(SDL_Renderer* renderer);
 
-	void avoidObstacle(std::vector <Object*> props);
+	void avoidObstacle(Vector direction, std::vector <Object*> props);
 
 
 	//Getters
 	Vector& getPosition();
-	Vector& getDirection();
+	//Vector& getDirection();
 	Vector& getSpeed();
 	
 

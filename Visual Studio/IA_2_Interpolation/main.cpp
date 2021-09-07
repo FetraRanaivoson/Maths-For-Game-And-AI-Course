@@ -14,7 +14,7 @@
 using namespace std;
 constexpr auto POS_X = 200, POS_Y = 75;
 constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 700;
-constexpr auto MAX_BOIDS = 60;
+constexpr auto MAX_BOIDS = 50;
 constexpr auto MAX_ENVIR_OBJECTS = 20;
 
 
@@ -83,14 +83,14 @@ int main(int argc, char** argv) {
 	std::vector <Object*> props;
 	createEnvironment(props);
 
-	Object* movingTarget = new Object(Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 15, Color(255, 0, 0, SDL_ALPHA_OPAQUE), WINDOW_WIDTH, WINDOW_HEIGHT);
+	Object* movingTarget = new Object(Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 15, Color(0, 255, 0, SDL_ALPHA_OPAQUE), WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	BehaviorManager* bm = new BehaviorManager();
 	bm->addBoids(boids);
 
-	Slider* separationSlider = new Slider(10, 10, 400, 0, 1, .75);
-	Slider* alignmentSlider = new Slider(430, 10, 400, 0, 1, 0);
-	Slider* cohesionSlider = new Slider(840, 10, 400, 0, 1, 0);
+	Slider* separationSlider = new Slider(10, 10, 400, 0, 100, 0);
+	Slider* alignmentSlider = new Slider(430, 10, 400, 0, 100, 0);
+	Slider* cohesionSlider = new Slider(840, 10, 400, 0, 100, 0);
 	Slider* targetSlider = new Slider(10, WINDOW_HEIGHT-10, 400, 0, 1, 0);
 
 	int clickPosX, clickPosY;
@@ -136,8 +136,8 @@ int main(int argc, char** argv) {
 void createBoids(std::vector<Boid*>& boids, int pointSize, double alpha)
 {
 	for (int i = 0; i < MAX_BOIDS; i++) {
-		double maxSpeed = 100.0;
-		double maxAcceleration = 700;
+		double maxSpeed = 100 ;
+		double maxAcceleration = 700 ;
 		Color pointColor(200, 200, 50, SDL_ALPHA_OPAQUE);
 		boids.push_back(new Boid(Vector(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT), 
 			pointSize, alpha, maxSpeed, maxAcceleration, pointColor));
