@@ -20,10 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{C0EEA51F-2CD0-46B9-A381-7E63EA03BD34}</ProjectGuid>
+    <ProjectGuid>{125C7128-42AA-4855-9A12-A68092E0C356}</ProjectGuid>
     <RootNamespace>1. deplacement point</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>IA_2_Interpolation</ProjectName>
+    <ProjectName>IA_3_Recherche d'un chemin</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -122,10 +122,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Object.cpp" />
-    <ClCompile Include="BehaviorManager.cpp" />
+    <ClCompile Include="Knot.cpp" />
+    <ClCompile Include="Labyrinth.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Boid.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib_Point\lib_Point.vcxproj">
@@ -136,9 +136,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Object.h" />
-    <ClInclude Include="BehaviorManager.h" />
-    <ClInclude Include="Boid.h" />
+    <ClInclude Include="Knot.h" />
+    <ClInclude Include="Labyrinth.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

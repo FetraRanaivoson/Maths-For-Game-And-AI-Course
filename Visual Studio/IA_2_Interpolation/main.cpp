@@ -1,3 +1,5 @@
+#include "..\IA_1_Perceptron\main.h"
+#include "..\IA_1_Perceptron\main.h"
 #include <iostream>
 #include <SDL.h>
 #include <time.h>
@@ -5,13 +7,19 @@
 #include <cstdlib>
 #include <time.h>
 #include "../lib_Point/Point.h"
+#include "Boid.h"
+#include "BehaviorManager.h"
+#include "Object.h"
 #include "../lib_Slider/Slider.h"
-#include "Labyrinth.h"
 using namespace std;
-constexpr auto POS_X = 200, POS_Y = 30;
-constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 800;
+constexpr auto POS_X = 200, POS_Y = 75;
+constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 700;
 constexpr auto MAX_BOIDS = 50;
 constexpr auto MAX_ENVIR_OBJECTS = 20;
+
+
+void createBoids(std::vector<Boid*>& boids, int pointSize, double alpha);
+void createEnvironment(std::vector<Object*>& staticArea);
 
 SDL_Renderer* init_SDL(const char* title) {
 #pragma region SDL initialization
@@ -32,7 +40,7 @@ SDL_Renderer* init_SDL(const char* title) {
 #pragma endregion
 }
 void clearWindow(SDL_Renderer* renderer) {
-	SDL_SetRenderDrawColor(renderer, 10, 10, 10, 1);
+	SDL_SetRenderDrawColor(renderer, 0, 20, 64, 1);
 	SDL_RenderClear(renderer);
 }
 void showRenderingBuffer(SDL_Renderer* renderer) {
@@ -64,30 +72,57 @@ bool RightClick(const Uint32& buttons)
 
 int main(int argc, char** argv) {
 	srand(time(NULL));
-	SDL_Renderer* renderer = init_SDL("A*");
+	SDL_Renderer* renderer = init_SDL("Interpolation");
 
 	//Initialize all objects
-	Labyrinth* labyrinth = new Labyrinth(WINDOW_WIDTH, WINDOW_HEIGHT);
-	
-	double timeToReset = 0.0; 
+	int pointSize = 7;
+	double alpha = .005;
+	std::vector<Boid*> boids;
+	createBoids(boids, pointSize, alpha);
 
+	std::vector <Object*> props;
+	createEnvironment(props);
+
+	Object* movingTarget = new Object(Point(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2), 15, Color(0, 255, 0, SDL_ALPHA_OPAQUE), WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	BehaviorManager* bm = new BehaviorManager();
+	bm->addBoids(boids);
+
+	Slider* separationSlider = new Slider(10, 10, 400, 0, 100, 0);
+	Slider* alignmentSlider = new Slider(430, 10, 400, 0, 100, 0);
+	Slider* cohesionSlider = new Slider(840, 10, 400, 0, 100, 0);
+	Slider* targetSlider = new Slider(10, WINDOW_HEIGHT-10, 400, 0, 1, 0);
+
+	int clickPosX, clickPosY;
+	Uint32 buttons;
 	bool endOfGame = false;
+
 	while (!endOfGame) {
-		
+		clearWindow(renderer);
 		SDL_Event event = getNextEvent();
 
-		if (!labyrinth->isPathFound()) {
-			labyrinth->draw(renderer);
-			labyrinth->findShortestPath(renderer);
+		SDL_PumpEvents();
+		buttons = SDL_GetMouseState(&clickPosX, &clickPosY);
+
+		movingTarget->drawRandom(renderer);
+		separationSlider->draw(renderer, event);
+		cohesionSlider->draw(renderer, event);
+		alignmentSlider->draw(renderer, event);
+		targetSlider->draw(renderer, event);
+
+
+		for (Boid* boid : boids) {
+			boid->setSeparationWeight(separationSlider->getValue());
+			boid->setAlignmentWeight(alignmentSlider->getValue());
+			boid->setCohesionWeight(cohesionSlider->getValue());
+			boid->setTargetWeight(targetSlider->getValue());
+			boid->update();
+			boid->follow(renderer, movingTarget->getPosition(), movingTarget, props);
+			boid->draw(renderer);
 		}
-		if (labyrinth->isPathFound())
-		{
-			timeToReset += .001;
-			if (timeToReset > 5) {
-				clearWindow(renderer);
-				labyrinth->reset();
-				timeToReset = 0;
-			}
+
+		for (Object* prop : props) {
+			prop->draw(renderer);
 		}
 
 		showRenderingBuffer(renderer);
@@ -97,3 +132,21 @@ int main(int argc, char** argv) {
 	return 0;
 }
 
+
+void createBoids(std::vector<Boid*>& boids, int pointSize, double alpha)
+{
+	for (int i = 0; i < MAX_BOIDS; i++) {
+		double maxSpeed = 100 ;
+		double maxAcceleration = 700 ;
+		Color pointColor(200, 200, 50, SDL_ALPHA_OPAQUE);
+		boids.push_back(new Boid(Vector(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT), 
+			pointSize, alpha, maxSpeed, maxAcceleration, pointColor));
+	}
+}
+
+void createEnvironment(std::vector<Object*>& staticArea)
+{
+	for (int i = 0; i < MAX_ENVIR_OBJECTS; i++) {
+		staticArea.push_back(new Object(Point(rand() % WINDOW_WIDTH, rand() % WINDOW_HEIGHT), rand() % 10 + 5.0, Color(20, 10, 10, SDL_ALPHA_OPAQUE), WINDOW_WIDTH, WINDOW_HEIGHT));
+	}
+}
