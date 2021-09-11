@@ -14,6 +14,7 @@ Knot::Knot(Point position, Point exit)
 void Knot::draw(SDL_Renderer* renderer, Color color, int size)
 {
 	position.draw(renderer, color, size);
+	position.drawCircle(renderer, 6, color, true);
 }
 
 double Knot::calculateH(Point exit)
@@ -65,6 +66,12 @@ void Knot::setP(Knot* p)
 	this->predecessor = p;
 }
 
+bool Knot::equal(Knot* knot)
+{
+	return this->getPosition().x == knot->getPosition().x &&
+		this->getPosition().y == knot->getPosition().y;
+}
+
 std::vector<Knot*> Knot::getNeighBoursKnots(std::vector<Wall*> walls)
 {
 	std::vector<Knot*> neighboursKnots;
@@ -94,7 +101,7 @@ bool Knot::IsInsideWall(std::vector<Point*>& neighbourPositions, int neighbour, 
 {
 	for (int i = 0; i < walls.size(); i++) {
 		if (neighbourPositions[neighbour]->x > walls[i]->getWall().x - WALL_TOLERANCE &&
-			neighbourPositions[neighbour]->x <  walls[i]->getWall().x + (double)walls[i]->getWall().w + WALL_TOLERANCE &&
+			neighbourPositions[neighbour]->x < walls[i]->getWall().x + (double)walls[i]->getWall().w + WALL_TOLERANCE &&
 			neighbourPositions[neighbour]->y > walls[i]->getWall().y - WALL_TOLERANCE &&
 			neighbourPositions[neighbour]->y < walls[i]->getWall().y + (double)walls[i]->getWall().h + WALL_TOLERANCE) {
 			return true;

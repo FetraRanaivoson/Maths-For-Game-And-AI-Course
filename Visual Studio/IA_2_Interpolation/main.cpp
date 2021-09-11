@@ -1,5 +1,3 @@
-#include "..\IA_1_Perceptron\main.h"
-#include "..\IA_1_Perceptron\main.h"
 #include <iostream>
 #include <SDL.h>
 #include <time.h>
@@ -10,13 +8,10 @@
 #include "../lib_Slider/Slider.h"
 #include "Labyrinth.h"
 using namespace std;
-constexpr auto POS_X = 200, POS_Y = 75;
-constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 700;
+constexpr auto POS_X = 200, POS_Y = 30;
+constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 800;
 constexpr auto MAX_BOIDS = 50;
 constexpr auto MAX_ENVIR_OBJECTS = 20;
-
-
-
 
 SDL_Renderer* init_SDL(const char* title) {
 #pragma region SDL initialization
@@ -73,15 +68,27 @@ int main(int argc, char** argv) {
 
 	//Initialize all objects
 	Labyrinth* labyrinth = new Labyrinth(WINDOW_WIDTH, WINDOW_HEIGHT);
+	
+	double timeToReset = 0.0; 
 
 	bool endOfGame = false;
 	while (!endOfGame) {
-		clearWindow(renderer);
+		
 		SDL_Event event = getNextEvent();
 
-	
-		labyrinth->draw(renderer);
-		labyrinth->findNearestPath(renderer);
+		if (!labyrinth->isPathFound()) {
+			labyrinth->draw(renderer);
+			labyrinth->findShortestPath(renderer);
+		}
+		if (labyrinth->isPathFound())
+		{
+			timeToReset += .001;
+			if (timeToReset > 5) {
+				clearWindow(renderer);
+				labyrinth->reset();
+				timeToReset = 0;
+			}
+		}
 
 		showRenderingBuffer(renderer);
 		endOfGame = keypressed(event, 'q');

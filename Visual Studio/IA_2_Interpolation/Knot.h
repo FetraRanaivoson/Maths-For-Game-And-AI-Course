@@ -3,8 +3,8 @@
 #include <vector>
 #include "Wall.h"
 
-constexpr double NEIGHBOUR_TOLERANCE_RANGE = 10.0;
-constexpr double WALL_TOLERANCE = 5.0;
+constexpr double NEIGHBOUR_TOLERANCE_RANGE = 8.0; //The greater the more precise but took longer to calculate
+constexpr double WALL_TOLERANCE = 1.0;
 
 class Knot
 {
@@ -39,6 +39,7 @@ public:
 	//Définir P: le noeud précédent à ce noeud
 	void setP(Knot* p);
 
+	bool equal(Knot* knot);
 
 	std::vector<Knot*> getNeighBoursKnots(std::vector<Wall*>walls);
 	bool IsInsideWall(std::vector<Point*>& neighbourPositions, int neighbour, std::vector<Wall*>& walls);
