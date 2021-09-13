@@ -1,6 +1,6 @@
 #include "Labyrinth.h"
 
-Knot* Labyrinth::exitKnot;
+Node* Labyrinth::exitKnot;
 
 double Labyrinth::getDistance(Point start, Point end)
 {
@@ -22,7 +22,7 @@ void Labyrinth::createEntryKnot()
 {
 	bool ok = false;
 	do {
-		this->entryKnot = new Knot(Point((rand() % 150) * 8.0, (rand() % 10) * 8.0), this->exitKnot->getPosition());
+		this->entryKnot = new Node(Point((rand() % 150) * 8.0, (rand() % 10) * 8.0), this->exitKnot->getPosition());
 		if (this->knotInsideWall(this->entryKnot, walls)) {
 			ok = false;
 		}
@@ -36,7 +36,7 @@ void Labyrinth::createExitKnot()
 	bool ok = false;
 	do {
 		Point exitPosition((double)this->width - (rand() % 50) * 8.0, (double)this->height - (rand() % 50) * 8.0);
-		this->exitKnot = new Knot(exitPosition, exitPosition);
+		this->exitKnot = new Node(exitPosition, exitPosition);
 		if (this->knotInsideWall(this->exitKnot, walls)) {
 			ok = false;
 		}
@@ -67,7 +67,7 @@ void Labyrinth::draw(SDL_Renderer* renderer)
 	this->exitKnot->draw(renderer, Color(255, 255, 0, SDL_ALPHA_OPAQUE), 5);
 }
 
-Knot* Labyrinth::getExitKnot()
+Node* Labyrinth::getExitKnot()
 {
 	return exitKnot;
 }
@@ -76,7 +76,7 @@ void Labyrinth::findShortestPath(SDL_Renderer* renderer)
 {
 	if (!openList.empty()) {
 		//Retirer de l'open-list un nœud N minimisant F=G+H
-		Knot* N = nullptr;
+		Node* N = nullptr;
 		double minF = 10000000;
 		int minIndex = -1;
 		this->FindN(minF, N, minIndex);
@@ -90,19 +90,19 @@ void Labyrinth::findShortestPath(SDL_Renderer* renderer)
 			//placer N dans la closed-list. N: current knot
 			this->openList.erase(this->openList.cbegin() + minIndex);
 			this->closedList.push_back(N);
-			for (Knot* knot : this->closedList) {
+			for (Node* knot : this->closedList) {
 				knot->draw(renderer, Color(255, 125, 0, SDL_ALPHA_OPAQUE), 1);
 			}
 
 			//Trouver les voisins de N
-			std::vector<Knot*>neighboursOfN;
+			std::vector<Node*>neighboursOfN;
 			this->findNeighboursOfN(neighboursOfN, N, renderer);
 
 			//Pour chaque voisin V de N...
-			for (Knot* V : neighboursOfN) {
+			for (Node* V : neighboursOfN) {
 				//...qui n'est pas dans la closed-list
 				bool found = false;
-				for (Knot* knot : this->closedList) {
+				for (Node* knot : this->closedList) {
 					if (knot->equal(V)) {
 						found = true; //so do nothing, it is in the closed list, which we won't touch anymore
 					}
@@ -113,19 +113,17 @@ void Labyrinth::findShortestPath(SDL_Renderer* renderer)
 
 					//Si V est dans l'open-list: recalculate their G cost from the parent of the current parent "N",
 					//To see if it's interesting to start FROM that parent TO the current V 
-					//...instead of FROM  that parent TO the current parent N TO the current V
-					//And check if the path from that parent to the V is longer  
+					//And check if the path from that parent to the V is shorter  
 					found = false;
-					for (Knot* openListknot : this->openList) {
+					for (Node* openListknot : this->openList) {
 						if (openListknot->equal(V)) {
 							found = true;
 							//IF the G of neighbour but calculated from previous parent >  The G of the same neighbour calculated from the actual parent N (line 127)
 							if (openListknot->getG() > V->getG()) {
 								//We take the lowest G cost from actual parent to the Knot and so we update the open-list knot to the lowest G cost
 								openListknot->setG(V->getG()); //G(N) + c'
-													//Set the parent of the knot to the parent of the actual knot (i.e: we go from that grand parent knot to this openListKnot)
-								openListknot->setP(N->getPredecessor()); //P = N //Parent the open-list knot to the parent of the parent of the current V
-																				 //current V parent = N (line 133), parent of N = N->getPredecessor()
+													//Set the parent of the knot in the open-list to the the actual knot 
+								openListknot->setP(N); //P = N 
 							}
 						}
 					}
@@ -161,7 +159,7 @@ void Labyrinth::reset()
 	this->pathFound = false;
 }
 
-void Labyrinth::updateNeighboursOfNHGFP(Knot* V, Knot* N)
+void Labyrinth::updateNeighboursOfNHGFP(Node* V, Node* N)
 {
 	//a- Calculer H(V): distance of the knot to end : done inside getNeighBoursKnots
 
@@ -175,15 +173,15 @@ void Labyrinth::updateNeighboursOfNHGFP(Knot* V, Knot* N)
 	V->setP(N);
 }
 
-void Labyrinth::findNeighboursOfN(std::vector<Knot*>& neighboursOfN, Knot* N, SDL_Renderer* renderer)
+void Labyrinth::findNeighboursOfN(std::vector<Node*>& neighboursOfN, Node* N, SDL_Renderer* renderer)
 {
 	neighboursOfN = N->getNeighBoursKnots(this->walls);
-	for (Knot* neighbour : neighboursOfN) {
+	for (Node* neighbour : neighboursOfN) {
 		neighbour->draw(renderer, Color(125, 0, 125, SDL_ALPHA_OPAQUE), 1);
 	}
 }
 
-void Labyrinth::FindN(double& minF, Knot*& N, int& minIndex)
+void Labyrinth::FindN(double& minF, Node*& N, int& minIndex)
 {
 	for (int i = 0; i < openList.size(); i++) {
 		double currentKnotF = openList[i]->getF();
@@ -195,11 +193,11 @@ void Labyrinth::FindN(double& minF, Knot*& N, int& minIndex)
 	}
 }
 
-void Labyrinth::displayPath(Knot*& N, SDL_Renderer* renderer)
+void Labyrinth::displayPath(Node*& N, SDL_Renderer* renderer)
 {
 	//Afficher le chemin en partant de N et en utilisant la propriété P : nœud précédsent
 	while (N->getPredecessor() != nullptr) {
-		Knot* predecessor = N->getPredecessor();
+		Node* predecessor = N->getPredecessor();
 		SDL_RenderDrawLine(renderer, N->getPosition().x, N->getPosition().y,
 			predecessor->getPosition().x,
 			predecessor->getPosition().y);
@@ -207,12 +205,12 @@ void Labyrinth::displayPath(Knot*& N, SDL_Renderer* renderer)
 	}
 }
 
-bool Labyrinth::isAtExitPoint(Knot* N)
+bool Labyrinth::isAtExitPoint(Node* N)
 {
 	return N->getPosition().x == this->exitKnot->getPosition().x && N->getPosition().y == this->exitKnot->getPosition().y;
 }
 
-bool Labyrinth::knotInsideWall(Knot* knot, std::vector<Wall*>& walls)
+bool Labyrinth::knotInsideWall(Node* knot, std::vector<Wall*>& walls)
 {
 	for (int i = 0; i < walls.size(); i++) {
 		if (knot->getPosition().x > walls[i]->getWall().x - 6.0

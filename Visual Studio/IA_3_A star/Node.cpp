@@ -1,80 +1,84 @@
-#include "Knot.h"
+#include "Node.h"
 
 #include "Labyrinth.h"
 
-Knot::Knot(Point position, Point exit)
+Node::Node(Point position, Point exit)
 {
 	this->position = position;
-	this->predecessor = nullptr;
-
 	this->H = this->calculateH(exit);
+
+	if (this->predecessor != nullptr)
+		this->G = this->predecessor->getG();
+	else
+		this->G = 0;
+
 	this->F = this->G + this->H;
 }
 
-void Knot::draw(SDL_Renderer* renderer, Color color, int size)
+void Node::draw(SDL_Renderer* renderer, Color color, int size)
 {
 	position.draw(renderer, color, size);
 	position.drawCircle(renderer, 6, color, true);
 }
 
-double Knot::calculateH(Point exit)
+double Node::calculateH(Point exit)
 {
 	double H = sqrt((this->position.x - exit.x) * (this->position.x - exit.x)
 		+ (this->position.y - exit.y) * (this->position.y - exit.y));
 	return H;
 }
 
-Point Knot::getPosition()
+Point Node::getPosition()
 {
 	return position;
 }
 
-Knot* Knot::getPredecessor() const
+Node* Node::getPredecessor() const
 {
 	return this->predecessor;
 }
 
 
 
-double Knot::getG()
+double Node::getG()
 {
 	return this->G;
 }
 
-double Knot::getF()
+double Node::getF()
 {
 	return this->F;
 }
 
-double Knot::getH()
+double Node::getH()
 {
 	return this->H;
 }
 
-void Knot::setG(double newG)
+void Node::setG(double newG)
 {
 	this->G = newG;
 }
 
-void Knot::setF(double newF)
+void Node::setF(double newF)
 {
 	this->F = newF;
 }
 
-void Knot::setP(Knot* p)
+void Node::setP(Node* p)
 {
 	this->predecessor = p;
 }
 
-bool Knot::equal(Knot* knot)
+bool Node::equal(Node* knot)
 {
 	return this->getPosition().x == knot->getPosition().x &&
 		this->getPosition().y == knot->getPosition().y;
 }
 
-std::vector<Knot*> Knot::getNeighBoursKnots(std::vector<Wall*> walls)
+std::vector<Node*> Node::getNeighBoursKnots(std::vector<Wall*> walls)
 {
-	std::vector<Knot*> neighboursKnots;
+	std::vector<Node*> neighboursKnots;
 
 	//Normally, there should be 8 Neighbours per knot, here: begining from top left and going clockwise
 	std::vector<Point*> neighbourPositions{
@@ -91,13 +95,13 @@ std::vector<Knot*> Knot::getNeighBoursKnots(std::vector<Wall*> walls)
 	for (int neighbour = 0; neighbour < 8; neighbour++) {
 		//Si le noeud à checker n'est pas un mur alors c'est un voisin du noeud
 		if (!this->IsInsideWall(neighbourPositions, neighbour, walls)) {
-			neighboursKnots.push_back(new Knot(Point(neighbourPositions[neighbour]->x, neighbourPositions[neighbour]->y), Labyrinth::getExitKnot()->getPosition()));
+			neighboursKnots.push_back(new Node(Point(neighbourPositions[neighbour]->x, neighbourPositions[neighbour]->y), Labyrinth::getExitKnot()->getPosition()));
 		}
 	}
 	return neighboursKnots;
 }
 
-bool Knot::IsInsideWall(std::vector<Point*>& neighbourPositions, int neighbour, std::vector<Wall*>& walls)
+bool Node::IsInsideWall(std::vector<Point*>& neighbourPositions, int neighbour, std::vector<Wall*>& walls)
 {
 	for (int i = 0; i < walls.size(); i++) {
 		if (neighbourPositions[neighbour]->x > walls[i]->getWall().x - WALL_TOLERANCE &&

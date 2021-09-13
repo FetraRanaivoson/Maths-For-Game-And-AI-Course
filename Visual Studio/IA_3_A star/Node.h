@@ -6,7 +6,7 @@
 constexpr double NEIGHBOUR_TOLERANCE_RANGE = 8.0; //The greater the more precise but took longer to calculate
 constexpr double WALL_TOLERANCE = 1.0;
 
-class Knot
+class Node
 {
 private:
 	Point position;
@@ -14,16 +14,16 @@ private:
 	double G = 0; //coût de déplacement du nœud de départ vers ce nœud
 	double F = 0; //évaluation de ce noeud
 
-	Knot* predecessor;
+	Node* predecessor;
 
 public:
-	Knot(Point position, Point exit);
+	Node(Point position, Point exit);
 	void draw(SDL_Renderer* renderer, Color color, int size);
 
 	double calculateH(Point exit);
 
 	Point getPosition();
-	Knot* getPredecessor() const;
+	Node* getPredecessor() const;
 
 	double getH();
 	double getG();
@@ -37,11 +37,11 @@ public:
 	void setF(double newF);
 
 	//Définir P: le noeud précédent à ce noeud
-	void setP(Knot* p);
+	void setP(Node* p);
 
-	bool equal(Knot* knot);
+	bool equal(Node* knot);
 
-	std::vector<Knot*> getNeighBoursKnots(std::vector<Wall*>walls);
+	std::vector<Node*> getNeighBoursKnots(std::vector<Wall*>walls);
 	bool IsInsideWall(std::vector<Point*>& neighbourPositions, int neighbour, std::vector<Wall*>& walls);
 };
 
