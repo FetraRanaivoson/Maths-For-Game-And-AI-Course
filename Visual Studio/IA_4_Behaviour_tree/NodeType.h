@@ -2,7 +2,7 @@
 
 static enum class Type
 {
-	isSequencer, isSelector, isAction
+	sequencer, selector, action
 };
 
 class NodeType

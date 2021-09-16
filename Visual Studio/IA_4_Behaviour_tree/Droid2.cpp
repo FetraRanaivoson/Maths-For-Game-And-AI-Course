@@ -49,10 +49,10 @@ void Droid::wander(SDL_Renderer* renderer, int width, int height)
 
 	if (this->pathNodes.size() > 0 && this->pathSteps != -1) {
 		
-
 		Point destination = Point(this->pathNodes[this->pathSteps]->getPosition().x, this->pathNodes[this->pathSteps]->getPosition().y);
 		this->goTo(destination);
-		if (this->position.x == destination.x && this->position.y == destination.y) {
+		double epsilon = 0.1;
+		if ( abs(this->position.x - destination.x) < epsilon && abs(this->position.y - destination.y) < epsilon) {
 			this->pathSteps--;
 			std::cout << "Searching" << std::endl;
 		}
@@ -90,5 +90,10 @@ void Droid::setPath(std::vector<Node*> pathNodes)
 void Droid::clearPath()
 {
 	this->pathNodes.clear();
+}
+
+NodeState Droid::action(int idAction)
+{
+	return NodeState::failed;
 }
 

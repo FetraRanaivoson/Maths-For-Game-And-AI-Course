@@ -38,7 +38,7 @@ void Labyrinth::createEntryKnot()
 	bool ok = false;
 	do {
 		this->entryKnot = new Node(Point((rand() % 150) * 8.0, (rand() % 10) * 8.0), this->exitKnot->getPosition(), nullptr);
-		if (this->knotInsideWall(this->entryKnot, walls)) {
+		if (this->nodeInsideWall(this->entryKnot, walls)) {
 			ok = false;
 		}
 		else
@@ -52,7 +52,7 @@ void Labyrinth::createExitKnot()
 	do {
 		Point exitPosition((double)this->width - (rand() % 50) * 8.0, (double)this->height - (rand() % 50) * 8.0);
 		this->exitKnot = new Node(exitPosition, exitPosition, nullptr);
-		if (this->knotInsideWall(this->exitKnot, walls)) {
+		if (this->nodeInsideWall(this->exitKnot, walls)) {
 			ok = false;
 		}
 		else
@@ -244,7 +244,7 @@ bool Labyrinth::isPathFound()
 
 
 
-Node* Labyrinth::getExitNode()
+Node*& Labyrinth::getExitNode()
 {
 	return exitKnot;
 }
@@ -315,13 +315,26 @@ bool Labyrinth::isAtExitPoint(Node* N, Node* end)
 	return N->getPosition().x == end->getPosition().x && N->getPosition().y == end->getPosition().y;
 }
 
-bool Labyrinth::knotInsideWall(Node* knot, std::vector<Wall*>& walls)
+bool Labyrinth::nodeInsideWall(Node* knot, std::vector<Wall*>& walls)
 {
 	for (int i = 0; i < walls.size(); i++) {
 		if (knot->getPosition().x > walls[i]->getWall().x - 6.0
 			&& knot->getPosition().x < (double)walls[i]->getWall().x + walls[i]->getWall().w + 6.0
 			&& knot->getPosition().y > walls[i]->getWall().y - 6.0
 			&& knot->getPosition().y < (double)walls[i]->getWall().y + walls[i]->getWall().h + 6.0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool Labyrinth::exitNodeInsideWall()
+{
+	for (int i = 0; i < this->walls.size(); i++) {
+		if (this->exitKnot->getPosition().x > this->walls[i]->getWall().x - 6.0
+			&& this->exitKnot->getPosition().x < (double)this->walls[i]->getWall().x + this->walls[i]->getWall().w + 6.0
+			&& this->exitKnot->getPosition().y > this->walls[i]->getWall().y - 6.0
+			&& this->exitKnot->getPosition().y < (double)this->walls[i]->getWall().y + this->walls[i]->getWall().h + 6.0) {
 			return true;
 		}
 	}

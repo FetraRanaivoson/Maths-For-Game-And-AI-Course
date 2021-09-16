@@ -1,8 +1,11 @@
 #pragma once
 #include "NodeType.h"
 #include <vector>
+#include "IActor.h"
 
-enum class NodeState
+class IActor;
+
+enum NodeState
 {
 	success, failed, progress
 };
@@ -14,14 +17,20 @@ private:
 	std::vector<BTNode*> btNodeChildren;
 
 	NodeState nodeState;
+
+	IActor* actor;
+	int idAction;
 	
 public:
 	BTNode(NodeType nodeType, NodeState nodeState);
-
-	void evaluateNode();
+	void addChild(BTNode* node);
+	std::vector<BTNode*> getChildren();
+	NodeState evaluateNode();
 
 	bool isSuccess();
 	bool isFailed();
 	bool isProgressing();
+
+
 };
 

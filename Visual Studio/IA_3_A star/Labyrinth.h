@@ -34,7 +34,7 @@ private:
 
 	bool pathFound = false;
 
-	bool knotInsideWall(Node* knot, std::vector<Wall*>& walls);
+	bool nodeInsideWall(Node* knot, std::vector<Wall*>& walls);
 	bool isAtExitPoint(Node* N);
 
 public:

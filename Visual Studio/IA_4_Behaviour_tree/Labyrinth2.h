@@ -36,7 +36,6 @@ private:
 	bool pathFound = false;
 	std::vector<Node*>pathNodes;
 
-	bool knotInsideWall(Node* knot, std::vector<Wall*>& walls);
 	bool isAtExitPoint(Node* N);
 	bool isAtExitPoint(Node* N, Node* end);
 
@@ -52,7 +51,7 @@ public:
 	void findShortestPath(Node* start, Node* end, SDL_Renderer* renderer);
 	bool isPathFound();
 	void reset();
-	static Node* getExitNode();
+	static Node*& getExitNode();
 	Node* getEntryNode();
 
 
@@ -61,6 +60,8 @@ public:
 
 	std::vector<Node*>getPathNodes();
 
+	bool nodeInsideWall(Node* knot, std::vector<Wall*>& walls);
+	bool exitNodeInsideWall();
 
 };
 

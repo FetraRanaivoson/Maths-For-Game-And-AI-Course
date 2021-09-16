@@ -8,6 +8,7 @@
 #include "../lib_Slider/Slider.h"
 #include "../IA_4_Behaviour_tree/Labyrinth2.h"
 #include "../IA_4_Behaviour_tree/Droid2.h"
+#include "BehaviourTree.h"
 using namespace std;
 constexpr auto POS_X = 200, POS_Y = 30;
 constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 800;
@@ -72,11 +73,21 @@ int main(int argc, char** argv) {
 	Droid* droid = new Droid(Point(8, 8), Color(255, 164, 0, SDL_ALPHA_OPAQUE));
 	labyrinth->addDroid(droid);
 
-	double timeToReset = 0.0;
+	//Create BT Nodes
+	//std::vector<BTNode*> btNodes;
+	//6throw
+	BTNode* selectorNode1 = new BTNode(Type::selector, NodeState::success);
+	selectorNode1->addChild(new BTNode(Type::sequencer, NodeState::failed));
+
+
+	//BTNode* wanderNode = new BTNode(Type::action, NodeState::failed, nullptr, nullptr);
+
+
+	//BehaviourTree* behaviourTree = new BehaviourTree(btNodes);
+
 
 	int clickPosX, clickPosY;
 	Uint32 buttons;
-
 	bool endOfGame = false;
 	while (!endOfGame) {
 		clearWindow(renderer);
@@ -85,49 +96,34 @@ int main(int argc, char** argv) {
 		SDL_PumpEvents();
 		buttons = SDL_GetMouseState(&clickPosX, &clickPosY);
 		if (LeftClick(buttons)) {
-			labyrinth->getExitNode()->setPosition(Point(clickPosX, clickPosY));
+			std::cout << "clicked" << std::endl;
 			//labyrinth->createExitKnot();
-			labyrinth->findShortestPath(
-				new Node(
-					Point(labyrinth->getDroid()->getPosition().x, labyrinth->getDroid()->getPosition().y),
-					Point(labyrinth->getExitNode()->getPosition().x, labyrinth->getExitNode()->getPosition().y),nullptr),
-				new Node(
-					Point(labyrinth->getExitNode()->getPosition().x, labyrinth->getExitNode()->getPosition().y),
-					Point(labyrinth->getExitNode()->getPosition().x, labyrinth->getExitNode()->getPosition().y), nullptr
-				), renderer
-			);
+			//labyrinth->getExitNode() = new Node(exitPosition, exitPosition, nullptr);
+			Point exitPosition(((int)(clickPosX / 8)) * 8.0, ((int)(clickPosY / 8)) * 8.0);
+			labyrinth->getExitNode()->setPosition(exitPosition);
+			if (!labyrinth->exitNodeInsideWall()) {
+				labyrinth->findShortestPath(
+					new Node(
+						Point(labyrinth->getDroid()->getPosition().x, labyrinth->getDroid()->getPosition().y),
+						Point(labyrinth->getExitNode()->getPosition().x, labyrinth->getExitNode()->getPosition().y), nullptr),
+					new Node(
+						Point(labyrinth->getExitNode()->getPosition().x, labyrinth->getExitNode()->getPosition().y),
+						Point(labyrinth->getExitNode()->getPosition().x, labyrinth->getExitNode()->getPosition().y), nullptr
+					), renderer
+				);
+			}
 		}
 
 		labyrinth->draw(renderer);
-		//labyrinth->findShortestPath(renderer);
-		
-
-		/*if (labyrinth->isPathFound())
-		{
-			timeToReset += .001;
-			if (timeToReset > 5) {
-				clearWindow(renderer);
-				labyrinth->reset();
-				timeToReset = 0;
-			}
-		}*/
-		//labyrinth->getDroid()->draw(renderer);
-		//labyrinth->getDroid()->goTo(labyrinth->getExitNode()->getPosition());
-		//labyrinth->getDroid()->wander(renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
-		//if (labyrinth->isPathFound()) {
-		//	//Go to first point, next time go to the next point, etc until pathNodes.size()
-		//	labyrinth->getDroid()->goTo(labyrinth->getPathNodes()[0]->getPosition());
-		//	labyrinth->getDroid()->draw(renderer);
-		//}
-
-
 		labyrinth->getDroid()->wander(renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 		showRenderingBuffer(renderer);
 		endOfGame = keypressed(event, 'q');
 	}
+
 	delete labyrinth;
 	delete droid;
+	//delete behaviourTree;
 	quit_SDL();
 	return 0;
 }

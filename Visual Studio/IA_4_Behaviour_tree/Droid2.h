@@ -5,7 +5,9 @@
 #include <cstdlib>
 #include <time.h>
 #include "Node2.h"
-class Droid
+#include "IActor.h"
+
+class Droid : IActor
 {
 private:
 	Point position;
@@ -38,5 +40,7 @@ public:
 	void setPathSteps(int numbOfSteps);
 	void setPath(std::vector<Node*>pathNodes);
 	void clearPath();
+
+	NodeState action(int idAction) override;
 };
 

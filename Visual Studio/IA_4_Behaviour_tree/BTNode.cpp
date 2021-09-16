@@ -5,38 +5,41 @@ BTNode::BTNode(NodeType nodeType, NodeState nodeState)
 	: nodeType(nodeType), nodeState(nodeState)
 {}
 
-void BTNode::evaluateNode()
+void BTNode::addChild(BTNode* node)
 {
-	if (this->nodeType.getType() == Type::isSequencer) {
+	this->btNodeChildren.push_back(node);
+}
+
+std::vector<BTNode*> BTNode::getChildren()
+{
+	return this->btNodeChildren;
+}
+
+NodeState BTNode::evaluateNode()
+{
+	if (this->nodeType.getType() == Type::sequencer) {
+		NodeState state = NodeState::success; //Compiler happy
 		for (BTNode* btNodeChild : this->btNodeChildren) {
-			if (btNodeChild->isSuccess()) {
-				this->nodeState = NodeState::success;
-			}
-			else if (btNodeChild->isFailed()) {
-				this->nodeState = NodeState::failed;
-				break;
-			}
-			else if (btNodeChild->isProgressing()) {
-				this->nodeState = NodeState::progress;
+			state = btNodeChild->evaluateNode();
+			if (state != NodeState::success) { //When child failed or running
 				break;
 			}
 		}
+		return state;
 	}
 
-	else if (this->nodeType.getType() == Type::isSelector) {
+	else if (this->nodeType.getType() == Type::selector) {
+		NodeState state = NodeState::failed; //Compiler happy
 		for (BTNode* btNodeChild : this->btNodeChildren) {
-			if (btNodeChild->isSuccess()) {
-				this->nodeState = NodeState::success;
-				break;
-			}
-			else if (btNodeChild->isFailed()) {
-				this->nodeState = NodeState::failed;
-			}
-			else if (btNodeChild->isProgressing()) {
-				this->nodeState = NodeState::progress;
+			state = btNodeChild->evaluateNode();
+			if (state != NodeState::failed) { //When child succeed or running
 				break;
 			}
 		}
+		return state;
+	}
+	else {
+		return this->actor->action(this->idAction);
 	}
 }
 

@@ -124,10 +124,12 @@
   <ItemGroup>
     <ClCompile Include="BTNode.cpp" />
     <ClCompile Include="Droid2.cpp" />
+    <ClCompile Include="IActor.cpp" />
     <ClCompile Include="Labyrinth2.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node2.cpp" />
     <ClCompile Include="NodeType.cpp" />
+    <ClCompile Include="BehaviourTree.cpp" />
     <ClCompile Include="Wall2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,9 +143,11 @@
   <ItemGroup>
     <ClInclude Include="BTNode.h" />
     <ClInclude Include="Droid2.h" />
+    <ClInclude Include="IActor.h" />
     <ClInclude Include="Labyrinth2.h" />
     <ClInclude Include="Node2.h" />
     <ClInclude Include="NodeType.h" />
+    <ClInclude Include="BehaviourTree.h" />
     <ClInclude Include="Wall2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -20,6 +20,12 @@
     <ClCompile Include="NodeType.cpp">
       <Filter>BehaviourTree</Filter>
     </ClCompile>
+    <ClCompile Include="BehaviourTree.cpp">
+      <Filter>BehaviourTree</Filter>
+    </ClCompile>
+    <ClCompile Include="IActor.cpp">
+      <Filter>BehaviourTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BTNode.h">
@@ -38,6 +44,12 @@
       <Filter>A%2a</Filter>
     </ClInclude>
     <ClInclude Include="NodeType.h">
+      <Filter>BehaviourTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviourTree.h">
+      <Filter>BehaviourTree</Filter>
+    </ClInclude>
+    <ClInclude Include="IActor.h">
       <Filter>BehaviourTree</Filter>
     </ClInclude>
   </ItemGroup>

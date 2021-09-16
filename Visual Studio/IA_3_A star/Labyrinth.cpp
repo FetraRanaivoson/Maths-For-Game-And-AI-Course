@@ -23,7 +23,7 @@ void Labyrinth::createEntryKnot()
 	bool ok = false;
 	do {
 		this->entryKnot = new Node(Point((rand() % 150) * 8.0, (rand() % 10) * 8.0), this->exitKnot->getPosition());
-		if (this->knotInsideWall(this->entryKnot, walls)) {
+		if (this->nodeInsideWall(this->entryKnot, walls)) {
 			ok = false;
 		}
 		else
@@ -37,7 +37,7 @@ void Labyrinth::createExitKnot()
 	do {
 		Point exitPosition((double)this->width - (rand() % 50) * 8.0, (double)this->height - (rand() % 50) * 8.0);
 		this->exitKnot = new Node(exitPosition, exitPosition);
-		if (this->knotInsideWall(this->exitKnot, walls)) {
+		if (this->nodeInsideWall(this->exitKnot, walls)) {
 			ok = false;
 		}
 		else
@@ -210,7 +210,7 @@ bool Labyrinth::isAtExitPoint(Node* N)
 	return N->getPosition().x == this->exitKnot->getPosition().x && N->getPosition().y == this->exitKnot->getPosition().y;
 }
 
-bool Labyrinth::knotInsideWall(Node* knot, std::vector<Wall*>& walls)
+bool Labyrinth::nodeInsideWall(Node* knot, std::vector<Wall*>& walls)
 {
 	for (int i = 0; i < walls.size(); i++) {
 		if (knot->getPosition().x > walls[i]->getWall().x - 6.0
