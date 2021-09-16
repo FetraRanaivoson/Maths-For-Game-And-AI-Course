@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="BTNode.cpp">
+      <Filter>BehaviourTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Node2.cpp">
+      <Filter>A%2a</Filter>
+    </ClCompile>
+    <ClCompile Include="Wall2.cpp">
+      <Filter>A%2a</Filter>
+    </ClCompile>
+    <ClCompile Include="Labyrinth2.cpp">
+      <Filter>A%2a</Filter>
+    </ClCompile>
+    <ClCompile Include="Droid2.cpp">
+      <Filter>A%2a</Filter>
+    </ClCompile>
+    <ClCompile Include="NodeType.cpp">
+      <Filter>BehaviourTree</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="BTNode.h">
+      <Filter>BehaviourTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Wall2.h">
+      <Filter>A%2a</Filter>
+    </ClInclude>
+    <ClInclude Include="Node2.h">
+      <Filter>A%2a</Filter>
+    </ClInclude>
+    <ClInclude Include="Labyrinth2.h">
+      <Filter>A%2a</Filter>
+    </ClInclude>
+    <ClInclude Include="Droid2.h">
+      <Filter>A%2a</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeType.h">
+      <Filter>BehaviourTree</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="BehaviourTree">
+      <UniqueIdentifier>{8f3493b5-aff8-4214-bb3e-d93a574261f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="A%2a">
+      <UniqueIdentifier>{f0fbe494-676b-40d5-9add-5c9680199617}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

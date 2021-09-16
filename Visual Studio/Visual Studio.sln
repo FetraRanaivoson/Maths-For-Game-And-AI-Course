@@ -69,7 +69,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IA_1_Perceptron", "IA_1_Per
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IA_2_Interpolation", "IA_2_Interpolation\IA_2_Interpolation.vcxproj", "{AC3AFCB2-0ECE-457D-88D4-4B0C1926CB2A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IA_3_Recherche d'un chemin", "IA_3_A star\IA_3_A star.vcxproj", "{125C7128-42AA-4855-9A12-A68092E0C356}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IA_3_A star", "IA_3_A star\IA_3_A star.vcxproj", "{125C7128-42AA-4855-9A12-A68092E0C356}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IA_4_Behaviour_tree", "IA_4_Behaviour_tree\IA_4_Behaviour_tree.vcxproj", "{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -311,6 +313,16 @@ Global
 		{125C7128-42AA-4855-9A12-A68092E0C356}.Release|x64.Build.0 = Release|x64
 		{125C7128-42AA-4855-9A12-A68092E0C356}.Release|x86.ActiveCfg = Release|Win32
 		{125C7128-42AA-4855-9A12-A68092E0C356}.Release|x86.Build.0 = Release|Win32
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Debug|x64.ActiveCfg = Debug|x64
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Debug|x64.Build.0 = Debug|x64
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Debug|x86.ActiveCfg = Debug|Win32
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Debug|x86.Build.0 = Debug|Win32
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Release|Any CPU.ActiveCfg = Release|Win32
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Release|x64.ActiveCfg = Release|x64
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Release|x64.Build.0 = Release|x64
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Release|x86.ActiveCfg = Release|Win32
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -346,6 +358,7 @@ Global
 		{DBCD8F13-88C4-482D-993C-CD4EA6883EB7} = {7722A023-625B-4864-B4D3-265D52104C30}
 		{AC3AFCB2-0ECE-457D-88D4-4B0C1926CB2A} = {7722A023-625B-4864-B4D3-265D52104C30}
 		{125C7128-42AA-4855-9A12-A68092E0C356} = {7722A023-625B-4864-B4D3-265D52104C30}
+		{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E} = {7722A023-625B-4864-B4D3-265D52104C30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F900EBAB-9C56-40A2-9B36-0BEB4A8B8B02}

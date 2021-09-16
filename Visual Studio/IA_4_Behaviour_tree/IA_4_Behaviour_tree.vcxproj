@@ -20,10 +20,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{125C7128-42AA-4855-9A12-A68092E0C356}</ProjectGuid>
+    <ProjectGuid>{0791A1EC-C15F-4F4B-A6E1-59638D6B8B7E}</ProjectGuid>
     <RootNamespace>1. deplacement point</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>IA_3_A star</ProjectName>
+    <ProjectName>IA_4_Behaviour_tree</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -122,10 +122,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Node.cpp" />
-    <ClCompile Include="Labyrinth.cpp" />
+    <ClCompile Include="BTNode.cpp" />
+    <ClCompile Include="Droid2.cpp" />
+    <ClCompile Include="Labyrinth2.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Wall.cpp" />
+    <ClCompile Include="Node2.cpp" />
+    <ClCompile Include="NodeType.cpp" />
+    <ClCompile Include="Wall2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\lib_Point\lib_Point.vcxproj">
@@ -136,9 +139,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Node.h" />
-    <ClInclude Include="Labyrinth.h" />
-    <ClInclude Include="Wall.h" />
+    <ClInclude Include="BTNode.h" />
+    <ClInclude Include="Droid2.h" />
+    <ClInclude Include="Labyrinth2.h" />
+    <ClInclude Include="Node2.h" />
+    <ClInclude Include="NodeType.h" />
+    <ClInclude Include="Wall2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

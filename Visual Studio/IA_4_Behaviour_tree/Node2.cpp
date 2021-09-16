@@ -1,11 +1,12 @@
-ï»¿#include "Node.h"
+#include "Node2.h"
+#include "Labyrinth2.h"
 
-#include "Labyrinth.h"
-
-Node::Node(Point position, Point exit)
+Node::Node(Point position, Point exit, Node* predecessor)
 {
 	this->position = position;
 	this->H = this->calculateH(exit);
+
+	this->predecessor = predecessor;
 
 	if (this->predecessor != nullptr)
 		this->G = this->predecessor->getG();
@@ -13,6 +14,11 @@ Node::Node(Point position, Point exit)
 		this->G = 0;
 
 	this->F = this->G + this->H;
+}
+
+Node::~Node()
+{
+	delete this->predecessor;
 }
 
 void Node::draw(SDL_Renderer* renderer, Color color, int size)
@@ -28,7 +34,12 @@ double Node::calculateH(Point exit)
 	return H;
 }
 
-Point Node::getPosition()
+void Node::setPosition(Point newPosition)
+{
+	this->position = newPosition;
+}
+
+Point& Node::getPosition()
 {
 	return position;
 }
@@ -81,6 +92,7 @@ std::vector<Node*> Node::getNeighBoursKnots(std::vector<Wall*> walls)
 	std::vector<Node*> neighboursKnots;
 
 	//Normally, there should be 8 Neighbours per knot, here: begining from top left and going clockwise
+
 	std::vector<Point*> neighbourPositions{
 		new Point(this->position.x - NEIGHBOUR_TOLERANCE_RANGE, this->position.y - NEIGHBOUR_TOLERANCE_RANGE),
 		new Point(this->position.x, this->position.y - NEIGHBOUR_TOLERANCE_RANGE),
@@ -92,12 +104,19 @@ std::vector<Node*> Node::getNeighBoursKnots(std::vector<Wall*> walls)
 		new Point(this->position.x - NEIGHBOUR_TOLERANCE_RANGE, this->position.y)
 	};
 
+
 	for (int neighbour = 0; neighbour < 8; neighbour++) {
-		//Si le noeud ï¿½ checker n'est pas un mur alors c'est un voisin du noeud
+		//Si le noeud à checker n'est pas un mur alors c'est un voisin du noeud
 		if (!this->IsInsideWall(neighbourPositions, neighbour, walls)) {
-			neighboursKnots.push_back(new Node(Point(neighbourPositions[neighbour]->x, neighbourPositions[neighbour]->y), Labyrinth::getExitKnot()->getPosition()));
+			neighboursKnots.push_back(new Node(Point(neighbourPositions[neighbour]->x, neighbourPositions[neighbour]->y), 
+				Labyrinth::getExitNode()->getPosition(),this));
 		}
 	}
+
+	for (Point* point : neighbourPositions) {
+		delete point;
+	}
+
 	return neighboursKnots;
 }
 
