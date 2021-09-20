@@ -1,8 +1,9 @@
 #include "BTNode.h"
 
 
-BTNode::BTNode(NodeType nodeType, NodeState nodeState)
-	: nodeType(nodeType), nodeState(nodeState)
+
+BTNode::BTNode(std::string name, NodeType nodeType)
+	: name(name), nodeType(nodeType)
 {}
 
 void BTNode::addChild(BTNode* node)
@@ -22,9 +23,11 @@ NodeState BTNode::evaluateNode()
 		for (BTNode* btNodeChild : this->btNodeChildren) {
 			state = btNodeChild->evaluateNode();
 			if (state != NodeState::success) { //When child failed or running
+				//std::cout << "A child failed or running" << std::endl;
 				break;
 			}
 		}
+		this->nodeState = state;
 		return state;
 	}
 
@@ -33,9 +36,11 @@ NodeState BTNode::evaluateNode()
 		for (BTNode* btNodeChild : this->btNodeChildren) {
 			state = btNodeChild->evaluateNode();
 			if (state != NodeState::failed) { //When child succeed or running
+				//std::cout << "A child succeed or running" << std::endl;
 				break;
 			}
 		}
+		this->nodeState = state;
 		return state;
 	}
 	else {
@@ -43,17 +48,19 @@ NodeState BTNode::evaluateNode()
 	}
 }
 
-bool BTNode::isSuccess()
+NodeState BTNode::getState()
 {
-	return (nodeState == NodeState::success) ? true : false;
+	return this->nodeState;
 }
 
-bool BTNode::isFailed()
+
+void BTNode::setActor(IActor* actor, Action action)
 {
-	return (nodeState == NodeState::failed) ? true : false;
+	this->actor = actor;
+	this->idAction = action;
 }
 
-bool BTNode::isProgressing()
+std::string BTNode::getName()
 {
-	return (nodeState == NodeState::progress) ? true : false;
+	return this->name;
 }

@@ -52,6 +52,7 @@
     <ClInclude Include="IActor.h">
       <Filter>BehaviourTree</Filter>
     </ClInclude>
+    <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="BehaviourTree">

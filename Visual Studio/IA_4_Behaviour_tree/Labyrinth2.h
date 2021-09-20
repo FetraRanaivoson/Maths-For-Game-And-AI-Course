@@ -14,54 +14,69 @@ constexpr auto MAX_WALL_HEIGHT = 16;
 class Labyrinth
 {
 private:
-	Droid* droid;
-	Node* entryKnot;
-	static Node* exitKnot;
-	std::vector <Wall*> walls;
+	static Droid* droid;
+	static Node* entryNode;
+	static Node* exitNode;
+	static Node* randomExitPointNode;
+	static std::vector <Wall*> walls;
 
-	std::vector <Node*> closedList; //noeuds déjà visités y compris le départ
-	std::vector <Node*> openList; //noeuds à traiter: voisins de la liste fermée
+	static std::vector <Node*> closedList; //noeuds déjà visités y compris le départ
+	static std::vector <Node*> openList; //noeuds à traiter: voisins de la liste fermée
 
-	double getDistance(Point start, Point end);
-	void FindN(double& minF, Node*& N, int& minIndex);
-	std::vector <Node*> getPath(Node*& N, SDL_Renderer* renderer);
-	void findNeighboursOfN(std::vector<Node*>& neighboursOfN, Node* N, SDL_Renderer* renderer);
-	void updateNeighboursOfNHGFP(Node* V, Node* N);
+	static double getDistance(Point start, Point end);
+	static void FindN(double& minF, Node*& N, int& minIndex);
+	static std::vector <Node*> getPath(Node*& N);
+	static void findNeighboursOfN(std::vector<Node*>& neighboursOfN, Node* N);
+	static void updateNeighboursOfNHGFP(Node* V, Node* N);
 
-	int width, height;
+	static int width, height;
 
 	void createEntryKnot();
 	void createWalls();
 
-	bool pathFound = false;
-	std::vector<Node*>pathNodes;
+	static bool pathFound;
+	static std::vector<Node*>pathNodes;
 
-	bool isAtExitPoint(Node* N);
-	bool isAtExitPoint(Node* N, Node* end);
+	static bool isAtExitPoint(Node* N);
+	static bool isAtExitPoint(Node* N, Node* end);
 
 	bool runningAstar = false;
 
+
 public:
-	void createExitKnot();
 	Labyrinth(int width, int height);
 	~Labyrinth();
+
+	static std::vector<Point> resources;
+	
+	static void createExitNode();
+	static void createRandomExitPointNode();
+	
+
 	void draw(SDL_Renderer* renderer);
+	
 	//The A* algorithm
 	void findShortestPath(SDL_Renderer* renderer); 
-	void findShortestPath(Node* start, Node* end, SDL_Renderer* renderer);
+	static void executeAstar(Point start, Point end);
 	bool isPathFound();
+	
 	void reset();
+
 	static Node*& getExitNode();
-	Node* getEntryNode();
+	static Node*& getEntryNode();
+	static Node*& getRandomExitPointNode();
 
 
 	void addDroid(Droid* droid);
-	Droid* getDroid();
+	static Droid* getDroid();
 
-	std::vector<Node*>getPathNodes();
+	void addResources(std::vector<Point> resources);
 
-	bool nodeInsideWall(Node* knot, std::vector<Wall*>& walls);
-	bool exitNodeInsideWall();
+	static std::vector<Node*>getPathNodes();
+
+	static bool nodeInsideWall(Node* knot, std::vector<Wall*>& walls);
+	static bool exitNodeInsideWall();
+	static bool randomExitNodeInsideWall();
 
 };
 

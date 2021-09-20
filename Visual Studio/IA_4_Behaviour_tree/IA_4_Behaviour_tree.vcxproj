@@ -145,6 +145,7 @@
     <ClInclude Include="Droid2.h" />
     <ClInclude Include="IActor.h" />
     <ClInclude Include="Labyrinth2.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Node2.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="BehaviourTree.h" />

@@ -3,7 +3,10 @@
 
 Node::Node(Point position, Point exit, Node* predecessor)
 {
+	position.x = ((int)(position.x / 8)) * 8.0;
+	position.y = ((int)(position.y / 8)) * 8;
 	this->position = position;
+
 	this->H = this->calculateH(exit);
 
 	this->predecessor = predecessor;
@@ -36,6 +39,8 @@ double Node::calculateH(Point exit)
 
 void Node::setPosition(Point newPosition)
 {
+	//newPosition.x = ((int)(newPosition.x / 8)) * 8.0;
+	//newPosition.y = ((int)(newPosition.y / 8)) * 8.0;
 	this->position = newPosition;
 }
 

@@ -9,11 +9,13 @@
 #include "../IA_4_Behaviour_tree/Labyrinth2.h"
 #include "../IA_4_Behaviour_tree/Droid2.h"
 #include "BehaviourTree.h"
+#include "main.h"
 using namespace std;
 constexpr auto POS_X = 200, POS_Y = 30;
 constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 800;
 constexpr auto MAX_BOIDS = 50;
 constexpr auto MAX_ENVIR_OBJECTS = 20;
+constexpr auto MAX_RESOURCES = 100;
 
 SDL_Renderer* init_SDL(const char* title) {
 #pragma region SDL initialization
@@ -64,30 +66,51 @@ bool RightClick(const Uint32& buttons)
 	return (buttons & SDL_BUTTON_RMASK) != 0;
 }
 
+
 int main(int argc, char** argv) {
 	srand(time(NULL));
 	SDL_Renderer* renderer = init_SDL("Behaviour");
 
-	//Initialize all objects
+	//Initialize scene
 	Labyrinth* labyrinth = new Labyrinth(WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	std::vector<Point>resources;
+	for (int i = 0; i < MAX_RESOURCES; i++) {
+		Point resourcePosition = Point((int)(rand() % WINDOW_WIDTH / 8) * 8.0, ((int)(rand() % WINDOW_HEIGHT) / 8) * 8.0, true);
+		resources.push_back(resourcePosition);
+	}
+
 	Droid* droid = new Droid(Point(8, 8), Color(255, 164, 0, SDL_ALPHA_OPAQUE));
 	labyrinth->addDroid(droid);
+	labyrinth->addResources(resources);
 
-	//Create BT Nodes
-	//std::vector<BTNode*> btNodes;
-	//6throw
-	BTNode* selectorNode1 = new BTNode(Type::selector, NodeState::success);
-	selectorNode1->addChild(new BTNode(Type::sequencer, NodeState::failed));
+	//Create BT Nodes here
+	BTNode* selectorBTNode1 = new BTNode("selector1", Type::selector);
+	BTNode* sequencerBTNode = new BTNode("sequencer", Type::sequencer);
 
+	BTNode* wanderBTNode = new BTNode("wander", Type::action);
+	wanderBTNode->setActor(droid, Action::wander); //Adding listener (listener implements/handle the action)
 
-	//BTNode* wanderNode = new BTNode(Type::action, NodeState::failed, nullptr, nullptr);
+	BTNode* checkResourcesBTNode = new BTNode("checkResources", Type::action);
+	checkResourcesBTNode->setActor(droid, Action::checkResourcesInRange); //Adding listener (listener implements/handle the action)
 
+	BTNode* goToResourcesBTNode = new BTNode("goToResources", Type::action);
+	goToResourcesBTNode->setActor(droid, Action::goToResource); //Adding listener (listener implements/handle the action)
 
-	//BehaviourTree* behaviourTree = new BehaviourTree(btNodes);
+	//Add children to root node
+	//left branch
+	selectorBTNode1->addChild(sequencerBTNode);
+	sequencerBTNode->addChild(checkResourcesBTNode);
+	sequencerBTNode->addChild(goToResourcesBTNode);
+	//right branch
+	selectorBTNode1->addChild(wanderBTNode);
+
 
 
 	int clickPosX, clickPosY;
 	Uint32 buttons;
+
+
 	bool endOfGame = false;
 	while (!endOfGame) {
 		clearWindow(renderer);
@@ -95,27 +118,12 @@ int main(int argc, char** argv) {
 
 		SDL_PumpEvents();
 		buttons = SDL_GetMouseState(&clickPosX, &clickPosY);
-		if (LeftClick(buttons)) {
-			std::cout << "clicked" << std::endl;
-			//labyrinth->createExitKnot();
-			//labyrinth->getExitNode() = new Node(exitPosition, exitPosition, nullptr);
-			Point exitPosition(((int)(clickPosX / 8)) * 8.0, ((int)(clickPosY / 8)) * 8.0);
-			labyrinth->getExitNode()->setPosition(exitPosition);
-			if (!labyrinth->exitNodeInsideWall()) {
-				labyrinth->findShortestPath(
-					new Node(
-						Point(labyrinth->getDroid()->getPosition().x, labyrinth->getDroid()->getPosition().y),
-						Point(labyrinth->getExitNode()->getPosition().x, labyrinth->getExitNode()->getPosition().y), nullptr),
-					new Node(
-						Point(labyrinth->getExitNode()->getPosition().x, labyrinth->getExitNode()->getPosition().y),
-						Point(labyrinth->getExitNode()->getPosition().x, labyrinth->getExitNode()->getPosition().y), nullptr
-					), renderer
-				);
-			}
-		}
 
+
+		selectorBTNode1->evaluateNode(); //Evaluate the root
+		labyrinth->getDroid()->update();
 		labyrinth->draw(renderer);
-		labyrinth->getDroid()->wander(renderer, WINDOW_WIDTH, WINDOW_HEIGHT);
+
 
 		showRenderingBuffer(renderer);
 		endOfGame = keypressed(event, 'q');

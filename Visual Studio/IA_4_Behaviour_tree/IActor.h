@@ -1,7 +1,7 @@
 #pragma once
 #include "BTNode.h"
 
-enum NodeState;
+enum class NodeState;
 
 class IActor
 {
