@@ -26,6 +26,7 @@
     <ClCompile Include="IActor.cpp">
       <Filter>BehaviourTree</Filter>
     </ClCompile>
+    <ClCompile Include="Droid3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BTNode.h">
@@ -53,6 +54,7 @@
       <Filter>BehaviourTree</Filter>
     </ClInclude>
     <ClInclude Include="main.h" />
+    <ClInclude Include="Droid3.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="BehaviourTree">

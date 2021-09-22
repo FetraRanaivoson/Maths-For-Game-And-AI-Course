@@ -10,12 +10,13 @@
 #include "../IA_4_Behaviour_tree/Droid2.h"
 #include "BehaviourTree.h"
 #include "main.h"
+#include "Droid3.h"
 using namespace std;
 constexpr auto POS_X = 200, POS_Y = 30;
 constexpr auto WINDOW_WIDTH = 1200, WINDOW_HEIGHT = 800;
 constexpr auto MAX_BOIDS = 50;
 constexpr auto MAX_ENVIR_OBJECTS = 20;
-constexpr auto MAX_RESOURCES = 100;
+constexpr auto MAX_RESOURCES = 150;
 
 SDL_Renderer* init_SDL(const char* title) {
 #pragma region SDL initialization
@@ -80,8 +81,9 @@ int main(int argc, char** argv) {
 		resources.push_back(resourcePosition);
 	}
 
-	Droid* droid = new Droid(Point(8, 8), Color(255, 164, 0, SDL_ALPHA_OPAQUE));
-	labyrinth->addDroid(droid);
+	//Droid* droid = new Droid(Point(8, 8), Color(255, 164, 0, SDL_ALPHA_OPAQUE));
+	//labyrinth->addDroid(droid);
+	Droid3* droid = new Droid3(Point(8, 8), Color(20, 10, 255, SDL_ALPHA_OPAQUE), WINDOW_WIDTH, WINDOW_HEIGHT);
 	labyrinth->addResources(resources);
 
 	//Create BT Nodes here
@@ -106,10 +108,10 @@ int main(int argc, char** argv) {
 	selectorBTNode1->addChild(wanderBTNode);
 
 
-
 	int clickPosX, clickPosY;
 	Uint32 buttons;
 
+	Point testPoint(100, 70, true);
 
 	bool endOfGame = false;
 	while (!endOfGame) {
@@ -120,9 +122,13 @@ int main(int argc, char** argv) {
 		buttons = SDL_GetMouseState(&clickPosX, &clickPosY);
 
 
-		selectorBTNode1->evaluateNode(); //Evaluate the root
-		labyrinth->getDroid()->update();
+		selectorBTNode1->evaluateNode(renderer); //Evaluate the root
 		labyrinth->draw(renderer);
+		droid->draw(renderer);
+		testPoint.draw(renderer, Color(255, 125, 0, 1), 10);
+		//droid->goTo(testPoint);
+
+		testPoint.update(event);
 
 
 		showRenderingBuffer(renderer);
@@ -131,7 +137,11 @@ int main(int argc, char** argv) {
 
 	delete labyrinth;
 	delete droid;
-	//delete behaviourTree;
+	delete selectorBTNode1;
+	delete sequencerBTNode;
+	delete wanderBTNode;
+	delete checkResourcesBTNode;
+	delete goToResourcesBTNode;
 	quit_SDL();
 	return 0;
 }

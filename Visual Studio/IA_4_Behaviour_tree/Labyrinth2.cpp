@@ -21,6 +21,7 @@ double Labyrinth::getDistance(Point start, Point end)
 }
 
 Labyrinth::Labyrinth(int width, int height)
+	:goldColor(rand() % 5 + 212, (rand() % 175 + 50) + 170, rand() % 5 + 50, SDL_ALPHA_OPAQUE)
 {
 	this->width = width;
 	this->height = height;
@@ -73,7 +74,7 @@ void Labyrinth::createExitNode()
 void Labyrinth::createRandomExitPointNode() {
 	bool ok = false;
 	do {
-		Point randomExitPosition((double)(rand() % Labyrinth::width / 8) * 8.0, (double)(rand() % Labyrinth::height/8) * 8.0);
+		Point randomExitPosition((double)(rand() % Labyrinth::width / 8) * 8.0, (double)(rand() % Labyrinth::height / 8) * 8.0);
 		Labyrinth::randomExitPointNode = new Node(randomExitPosition, randomExitPosition, nullptr);
 		if (Labyrinth::nodeInsideWall(Labyrinth::randomExitPointNode, walls)) {
 			ok = false;
@@ -102,11 +103,11 @@ void Labyrinth::draw(SDL_Renderer* renderer)
 	}
 	this->entryNode->draw(renderer, Color(255, 255, 0, SDL_ALPHA_OPAQUE), 5);
 	this->exitNode->draw(renderer, Color(255, 0, 0, SDL_ALPHA_OPAQUE), 15);
-	this->randomExitPointNode->draw(renderer, Color(125, 125, 0, SDL_ALPHA_OPAQUE), 25); 
-	this->droid->draw(renderer);
+	this->randomExitPointNode->draw(renderer, Color(125, 125, 0, SDL_ALPHA_OPAQUE), 25);
+
 
 	for (int i = 0; i < resources.size(); i++) {
-		resources[i].draw(renderer, Color(125, 255, 0, SDL_ALPHA_OPAQUE), 10);
+		resources[i].draw(renderer, Color(rand() % 5 + 212, (rand() % 175 + 50) + 170, rand() % 5 + 50, SDL_ALPHA_OPAQUE), 10);
 	}
 }
 
@@ -114,7 +115,6 @@ void Labyrinth::addDroid(Droid* droid)
 {
 	this->droid = droid;
 }
-
 Droid* Labyrinth::getDroid()
 {
 	return Labyrinth::droid;
@@ -204,10 +204,10 @@ void Labyrinth::findShortestPath(SDL_Renderer* renderer)
 }
 
 
-void Labyrinth::executeAstar(Point start, Point end)
+std::vector<Node*> Labyrinth::getPathNodes(Point start, Point end)
 {
-	start.x = ((int)(start.x/8)) * 8.0 ;
-	start.y = ((int)(start.y/8)) * 8.0 ;
+	start.x = ((int)(start.x / 8)) * 8.0;
+	start.y = ((int)(start.y / 8)) * 8.0;
 
 	end.x = ((int)(end.x / 8)) * 8.0;
 	end.y = ((int)(end.y / 8)) * 8.0;
@@ -218,9 +218,10 @@ void Labyrinth::executeAstar(Point start, Point end)
 	Labyrinth::openList.clear();
 	Labyrinth::closedList.clear();
 	Labyrinth::openList.push_back(startNode);
-	
+
 
 	bool pathFound = false;
+	std::vector <Node*> pathNodes;
 
 	while (!openList.empty() && !pathFound) {
 		//Retirer de l'open-list un nœud N minimisant F=G+H
@@ -229,9 +230,11 @@ void Labyrinth::executeAstar(Point start, Point end)
 		int minIndex = -1;
 		Labyrinth::FindN(minF, N, minIndex);
 
+
 		if (Labyrinth::isAtExitPoint(N, endNode) && !Labyrinth::pathFound) {
-			Labyrinth::pathNodes = Labyrinth::getPath(N);
-			Labyrinth::droid->setPath(pathNodes);
+			pathNodes = Labyrinth::getPath(N);
+			//Labyrinth::pathNodes = Labyrinth::getPath(N);
+			//Labyrinth::droid->setPath(pathNodes);
 			pathFound = true;
 		}
 		else {
@@ -283,7 +286,7 @@ void Labyrinth::executeAstar(Point start, Point end)
 			}
 		}
 	}
-	//this->getDroid()->wander(renderer, this->width, this->height);
+	return pathNodes;
 }
 
 bool Labyrinth::isPathFound()
@@ -355,7 +358,7 @@ std::vector <Node*> Labyrinth::getPath(Node*& N)
 }
 
 bool Labyrinth::isAtExitPoint(Node* N)
-{	
+{
 	return abs(N->getPosition().x - exitNode->getPosition().x) < 1.0 && abs(N->getPosition().y - exitNode->getPosition().y);
 	//return N->getPosition().x == Labyrinth::exitNode->getPosition().x && N->getPosition().y == Labyrinth::exitNode->getPosition().y;
 		//|| N->getPosition().x == Labyrinth::randomExitPointNode->getPosition().x && N->getPosition().y == Labyrinth::randomExitPointNode->getPosition().y;

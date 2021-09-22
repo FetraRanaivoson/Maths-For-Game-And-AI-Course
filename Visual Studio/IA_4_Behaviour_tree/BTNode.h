@@ -3,6 +3,7 @@
 #include "NodeType.h"
 #include <vector>
 #include "IActor.h"
+#include "SDL.h"
 
 class IActor;
 
@@ -32,7 +33,7 @@ public:
 	BTNode(std::string name, NodeType nodeType);
 	void addChild(BTNode* node);
 	std::vector<BTNode*> getChildren();
-	NodeState evaluateNode();
+	NodeState evaluateNode(SDL_Renderer* renderer);
 	NodeState getState();
 
 	void setActor(IActor* actor, Action action); //like addListener (droid)

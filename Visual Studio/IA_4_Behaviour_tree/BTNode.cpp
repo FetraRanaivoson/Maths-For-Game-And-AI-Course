@@ -16,12 +16,12 @@ std::vector<BTNode*> BTNode::getChildren()
 	return this->btNodeChildren;
 }
 
-NodeState BTNode::evaluateNode()
+NodeState BTNode::evaluateNode(SDL_Renderer* renderer)
 {
 	if (this->nodeType.getType() == Type::sequencer) {
 		NodeState state = NodeState::success; //Compiler happy
 		for (BTNode* btNodeChild : this->btNodeChildren) {
-			state = btNodeChild->evaluateNode();
+			state = btNodeChild->evaluateNode(renderer);
 			if (state != NodeState::success) { //When child failed or running
 				//std::cout << "A child failed or running" << std::endl;
 				break;
@@ -34,7 +34,7 @@ NodeState BTNode::evaluateNode()
 	else if (this->nodeType.getType() == Type::selector) {
 		NodeState state = NodeState::failed; //Compiler happy
 		for (BTNode* btNodeChild : this->btNodeChildren) {
-			state = btNodeChild->evaluateNode();
+			state = btNodeChild->evaluateNode(renderer);
 			if (state != NodeState::failed) { //When child succeed or running
 				//std::cout << "A child succeed or running" << std::endl;
 				break;
@@ -44,7 +44,7 @@ NodeState BTNode::evaluateNode()
 		return state;
 	}
 	else {
-		return this->actor->action(this->idAction);
+		return this->actor->action(this->idAction, renderer);
 	}
 }
 

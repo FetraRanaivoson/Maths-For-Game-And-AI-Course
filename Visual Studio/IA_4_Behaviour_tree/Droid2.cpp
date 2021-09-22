@@ -34,30 +34,31 @@ void Droid::incrementSize(double increment) {
 void Droid::goTo(Point start, Point destination)
 {
 	this->currentTime = SDL_GetTicks();
-	if (this->currentTime - this->lastUpdate > this->deltaTime) {
-		//this->alpha += .1;
+	//if (this->currentTime - this->lastUpdate > this->deltaTime) {
+		//this->alpha += .3;
 		//std::cout << this->alpha << std::endl;
-		Vector startPosition(start.x, start.y);
-		Vector destinationPosition(destination.x, destination.y);
-		if (this->alpha <= 1.0) {
-			startPosition = (1 - this->alpha) * startPosition + this->alpha * destinationPosition;
-			this->position.x = startPosition.x;
-			this->position.y = startPosition.y;
-			this->lastUpdate = this->currentTime;
-		}
-	}
+	Vector startPosition(start.x, start.y);
+	Vector destinationPosition(destination.x, destination.y);
+	//if (this->alpha <= 1.0) {
+	startPosition = (1 - this->alpha) * startPosition + this->alpha * destinationPosition;
+	this->position.x = startPosition.x;
+	this->position.y = startPosition.y;
+	this->lastUpdate = this->currentTime;
+	//}
+//}
 }
 
-void Droid::update()
+void Droid::update(int posX, int posY)
 {
-	/*randomPlace = { rand() % width + 0.0, rand() % height + 0.0 };
-	randomPlace.draw(renderer, Color(255, 0, 0, 1), 10);
-	this->goTo(randomPlace);*/
-	/*if (this->droid.x == randomPlace.x && this->droid.y == randomPlace.y) {
+	//if (this->pathIsRefreshed) {
+	posX = ((int)(posX * 8.0)) / 8;
+	posY = ((int)(posY * 8.0)) / 8;
+	this->setPositionToGo(posX, posY);
+	//this->pathIsRefreshed = false;
+//}
 
-	}*/
-	//-1
 	if (this->pathNodes.size() > 0 && this->pathSteps != -1) {
+		this->pathSteps = this->pathNodes.size() - 2;
 		Point start = Point(this->pathNodes[(long long)this->pathSteps + 1]->getPosition().x, this->pathNodes[(long long)this->pathSteps + 1]->getPosition().y);
 		Point destination = Point(this->pathNodes[this->pathSteps]->getPosition().x, this->pathNodes[this->pathSteps]->getPosition().y);
 		this->goTo(start, destination);
@@ -65,21 +66,22 @@ void Droid::update()
 		double epsilon = 0.1;
 		if (abs(this->position.x - destination.x) < epsilon && abs(this->position.y - destination.y) < epsilon) {
 			this->pathSteps--;
-			//std::cout << "Searching" << std::endl;
 			if (this->pathSteps == -1) {
 				this->pathNodes.clear();
-				//std::cout << "Found" << std::endl;
 			}
 		}
 	}
 }
 
-void Droid::moveToPosition(int posX, int posY) {
+void Droid::setPositionToGo(int posX, int posY) {
 	Point exitPosition(posX, posY);
-	Labyrinth::getExitNode()->setPosition(exitPosition);//
-	if (!Labyrinth::exitNodeInsideWall()) {
-		Labyrinth::executeAstar(Labyrinth::getDroid()->getPosition(), exitPosition);
-	}
+	//Labyrinth::getExitNode()->setPosition(exitPosition);
+	std::vector<Node*> pathNodes = Labyrinth::getPathNodes(this->position, exitPosition);
+	if (pathNodes.size() > 0)
+		this->pathNodes = pathNodes;
+		/*if (!Labyrinth::exitNodeInsideWall()) {
+			Labyrinth::getPathNodes(Labyrinth::getDroid()->getPosition(), exitPosition);
+		}*/
 }
 
 //void Droid::moveToPosition(int posX, int posY) {
@@ -113,44 +115,44 @@ void Droid::clearPath()
 	this->pathNodes.clear();
 }
 
-NodeState Droid::action(int idAction)
+NodeState Droid::action(int idAction, SDL_Renderer* renderer)
 {
 	if (idAction == Action::checkResourcesInRange) {
-		if (this->foundResource()) {
+		if (this->foundResource(renderer)) {
 			//std::cout << "Droid found nearby resources" << std::endl;
 			return NodeState::success;
 		}
 		return NodeState::failed;
 	}
 	else if (idAction == Action::goToResource) {
-		if (this->isAtDestinationNode() && !this->refreshPath) {
+		if (this->isAtDestinationNode() && !this->pathIsRefreshed) {
 			this->arrivedAtTarget = true;
-			this->refreshPath = true;
+			this->pathIsRefreshed = true;
 			//this->awarenessRange += 10;
 			this->incrementSize(5);
 			return NodeState::success;
 		}
 
 		if (!this->arrivedAtTarget) {
-			if (this->refreshPath) {
-				this->moveToPosition(this->resourcePointFound.x, this->resourcePointFound.y);
-				this->refreshPath = false;
-			}
-			this->update();
+			/*if (this->pathIsRefreshed) {
+				this->setPositionToGo(this->resourcePointFound.x, this->resourcePointFound.y);
+				this->pathIsRefreshed = false;
+			}*/
+			this->update(this->resourcePointFound.x, this->resourcePointFound.y);
 			//std::cout << "Droid is going to nearby resources" << std::endl;
 			return NodeState::progress;
 		}
 	}
 	//else if (idAction == Action::wander) {
-		this->currentTimeRandomPointCreation = SDL_GetTicks();
-		if (this->currentTimeRandomPointCreation - this->lastTimeRandomPointSpawned > this->timeToSpawnRandomPoint) {
-			Point randomPosition(rand()%1200, rand() % 800);
-			this->moveToPosition(randomPosition.x, randomPosition.y);
-			this->lastTimeRandomPointSpawned = this->currentTimeRandomPointCreation;
-			return NodeState::success;
-		}
-		//return NodeState::failed;
-	//}
+	/*this->currentTimeRandomPointCreation = SDL_GetTicks();
+	if (this->currentTimeRandomPointCreation - this->lastTimeRandomPointSpawned > this->timeToSpawnRandomPoint) {
+		Point randomPosition(rand() % 1200, rand() % 800);
+		this->setPositionToGo(randomPosition.x, randomPosition.y);
+		this->lastTimeRandomPointSpawned = this->currentTimeRandomPointCreation;
+		return NodeState::success;
+	}*/
+	//return NodeState::failed;
+//}
 	return NodeState::progress;
 }
 
@@ -159,7 +161,7 @@ void Droid::setAwarenessRange(double newAwarenessRange)
 	this->awarenessRange = newAwarenessRange;
 }
 
-bool Droid::foundResource()
+bool Droid::foundResource(SDL_Renderer* renderer)
 {
 	//double distance = 10000;
 	for (int i = 0; i < Labyrinth::resources.size(); i++) {
@@ -172,7 +174,7 @@ bool Droid::foundResource()
 			this->resourcePointFound = Labyrinth::resources[i];
 
 			this->arrivedAtTarget = false;
-			this->refreshPath = true;
+			this->pathIsRefreshed = true;
 			return true;
 		}
 	}

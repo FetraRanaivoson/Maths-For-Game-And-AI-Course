@@ -20,7 +20,7 @@ private:
 
 	Uint32 currentTime = 0;
 	Uint32 lastUpdate = 0;
-	int deltaTime = 150;
+	int deltaTime = 10;
 
 	Point randomPlace;
 	Uint32 currentTimeRandomPointCreation = 0;
@@ -29,13 +29,12 @@ private:
 
 	std::vector<Node*>pathNodes;
 	int pathSteps = 0;
-	bool hasPathToGo = false;
 
 	double awarenessRange = 50;
 	Point resourcePointFound;
 
 	bool arrivedAtTarget = false;
-	bool refreshPath = false;
+	bool pathIsRefreshed = false;
 
 	//bool checkResource = true;
 
@@ -48,8 +47,8 @@ public:
 	void incrementSize(double increment);
 
 	void goTo(Point start, Point destination);
-	void update();
-	void moveToPosition(int posX, int posY);
+	void update(int posX, int posY);
+	void setPositionToGo(int posX, int posY);
 
 	bool isAtDestinationNode();
 
@@ -57,10 +56,10 @@ public:
 	void setPath(std::vector<Node*>pathNodes);
 	void clearPath();
 
-	NodeState action(int idAction) override; //event handler
+	NodeState action(int idAction, SDL_Renderer* renderer) override; //event handler
 
 	void setAwarenessRange(double newAwarenessRange);
 
-	bool foundResource();
+	bool foundResource(SDL_Renderer* renderer);
 };
 

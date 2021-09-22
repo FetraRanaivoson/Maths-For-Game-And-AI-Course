@@ -42,6 +42,11 @@ private:
 
 	bool runningAstar = false;
 
+	Color goldColor;
+	Uint32 currentColorChangeTime = 0;
+	Uint32 lastTimeColorChanged = 0;
+	int timeToUpdateColor = 50; //ms
+
 
 public:
 	Labyrinth(int width, int height);
@@ -57,7 +62,7 @@ public:
 	
 	//The A* algorithm
 	void findShortestPath(SDL_Renderer* renderer); 
-	static void executeAstar(Point start, Point end);
+	static std::vector<Node*> getPathNodes(Point start, Point end);
 	bool isPathFound();
 	
 	void reset();
