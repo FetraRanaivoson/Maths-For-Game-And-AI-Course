@@ -246,11 +246,11 @@ int main(int argc, char** argv) {
 		vtX		 = vtX		+ (9.81 + sliders[ACCELERATION_X]->getValue()) * ellapsedNanoInSecond;
 		vtY		 = vtY      + (9.81 + sliders[ACCELERATION_Y]->getValue()) * ellapsedNanoInSecond; 
 
-		if ((object.x > WIDTH && vtX > 0) ||
+		if ((object.x > WINDOW_WIDTH && vtX > 0) ||
 			(object.x < 0 && vtX < 0)) {
 			vtX *= -0.9;
 		}
-		if ((object.y > HEIGHT && vtY > 0) ||
+		if ((object.y > WINDOW_HEIGHT && vtY > 0) ||
 			(object.y < 0 && vtY < 0)) {
 			vtY *= -0.9;
 		}

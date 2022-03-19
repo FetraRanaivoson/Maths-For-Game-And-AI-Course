@@ -142,7 +142,7 @@ int main(int argc, char** argv) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	fenetre = SDL_CreateWindow("SDL template", 200, 100, WIDTH, WINDOW_HEIGHT, 0);
+	fenetre = SDL_CreateWindow("SDL template", 200, 100, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	renderer = SDL_CreateRenderer(fenetre, 0, 0);
 #pragma endregion
 	//Le nuage de points

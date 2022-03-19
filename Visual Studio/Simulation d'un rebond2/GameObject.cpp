@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include <time.h>
 
-__time64_t Perceptron::getTimeInNanoSeconds()
+__time64_t GameObject::getTimeInNanoSeconds()
 {
 	struct _timespec64 ts;
 	if (_timespec64_get(&ts, TIME_UTC) == 0) {
@@ -15,7 +15,7 @@ __time64_t Perceptron::getTimeInNanoSeconds()
 	//Nombre de nanosec écoulé depuis le 1er janvier 70
 }
 
-Perceptron::Perceptron(double mass, Point position, Vector speed, int width, int height)
+GameObject::GameObject(double mass, Point position, Vector speed, int width, int height)
 	: positionA(position), speed(speed), acceleration(0, 0) {
 	this->mass = mass;
 	this->lastUpdate = this->getTimeInNanoSeconds();
@@ -23,7 +23,7 @@ Perceptron::Perceptron(double mass, Point position, Vector speed, int width, int
 	this->height = height;
 }
 
-void Perceptron::update(Slider* accelerationX, Slider* accelerationY) {
+void GameObject::update(Slider* accelerationX, Slider* accelerationY) {
 	__time64_t currentUpdate = this->getTimeInNanoSeconds();
 
 	//	compute elapsed time (in seconds) since last position change
@@ -53,7 +53,7 @@ void Perceptron::update(Slider* accelerationX, Slider* accelerationY) {
 	this->acceleration.y = sum.y / mass;
 }
 
-double Perceptron::sgn(double speed)
+double GameObject::sgn(double speed)
 {
 	if (speed < 0)
 		return -1;
@@ -61,24 +61,24 @@ double Perceptron::sgn(double speed)
 		return 1;
 }
 
-Point Perceptron::getPosition() {
+Point GameObject::getPosition() {
 	return this->positionA;
 }
 
-double Perceptron::getSpeedX() {
+double GameObject::getSpeedX() {
 	return this->speed.x;
 }
 
-double Perceptron::getSpeedY()
+double GameObject::getSpeedY()
 {
 	return this->speed.y;
 }
 
-void Perceptron::setSpeed(Vector newSpeed) {
+void GameObject::setSpeed(Vector newSpeed) {
 	this->speed = newSpeed;
 }
 
-void Perceptron::setSpeed(Slider* speedX, Slider* speedY)
+void GameObject::setSpeed(Slider* speedX, Slider* speedY)
 {
 	this->speed.x = sgn(getSpeedX()) * speedX->getValue();
 	this->speed.y = sgn(getSpeedY()) * speedY->getValue();
@@ -87,7 +87,7 @@ void Perceptron::setSpeed(Slider* speedX, Slider* speedY)
 
 
 
-void Perceptron::draw(SDL_Renderer* renderer, Color color, Slider* accelerationX, Slider* accelerationY) {
+void GameObject::draw(SDL_Renderer* renderer, Color color, Slider* accelerationX, Slider* accelerationY) {
 	this->update(accelerationX, accelerationY);
 
 	//	check borders of screen

@@ -33,7 +33,7 @@ void rectangleRetourLigne(SDL_Rect& rect, Slider* sliders[]) {
 }
 
 bool rectangleVisible(SDL_Rect& rect) {
-	return rect.x + rect.w <= WIDTH && rect.y + rect.h <= 500;
+	return rect.x + rect.w <= WINDOW_WIDTH && rect.y + rect.h <= 500;
 }
 
 int calculerLignes(Slider sliders[], int with, int height) {
@@ -63,7 +63,7 @@ int main(int argc, char** argv) {
 	SDL_ShowCursor(SDL_ENABLE);	//	show mouse cursor
 
 	//	create the window and its associated renderer
-	fenetre = SDL_CreateWindow("SDL template", 1920 + 200, 100, WIDTH, WINDOW_HEIGHT, 0);
+	fenetre = SDL_CreateWindow("SDL template", 200, 100, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	renderer = SDL_CreateRenderer(fenetre, 0, 0);
 #pragma endregion
 
@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
 
 		//	affichage de la ligne qui separe les 2 zones (zone des rectangles et zone des sliders)
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-		SDL_RenderDrawLine(renderer, 0, 500, WIDTH, 500);
+		SDL_RenderDrawLine(renderer, 0, 500, WINDOW_WIDTH, 500);
 
 		//	affichage du rectangle en haut a gauche
 		SDL_SetRenderDrawColor(renderer, 200, 255, 50, SDL_ALPHA_OPAQUE);

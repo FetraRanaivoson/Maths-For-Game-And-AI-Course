@@ -3,7 +3,7 @@
 #include "../lib_Point/Point.h"
 #include "../lib_Slider/Slider.h"
 
-class Perceptron {
+class GameObject {
 private:
 	double mass;
 
@@ -22,7 +22,7 @@ private:
 
 public:
 	//	constructor
-	Perceptron(double mass, Point position, Vector speed, int width, int height);
+	GameObject(double mass, Point position, Vector speed, int width, int height);
 	void update(Slider* accelerationX, Slider* accelerationY);
 
 	//	getters and setters

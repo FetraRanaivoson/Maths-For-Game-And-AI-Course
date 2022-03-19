@@ -93,7 +93,7 @@ void placeSliders(Slider* sliders[])
 {
 	for (int i = 0; i < 12; i++) {
 		int x = 30 + (i / 2) * (200 + 30);
-		int y = HEIGHT - 100 + (i % 2) * 30;
+		int y = WINDOW_HEIGHT - 100 + (i % 2) * 30;
 		sliders[i] = new Slider(x, y, 200, 0, 1000, 50);
 	}
 }
